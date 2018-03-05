@@ -40,13 +40,17 @@ public class KeyManager implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         // set true if key was pressed
-        pressedKeys[e.getKeyCode()] = true;
+        if(e.getKeyCode() < SIZE) {
+            pressedKeys[e.getKeyCode()] = true;
+        }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        pressedKeys[e.getKeyCode()] = false;
-        releasedKeys[e.getKeyCode()] = true;
+        if(e.getKeyCode() < SIZE) {
+            pressedKeys[e.getKeyCode()] = false;
+            releasedKeys[e.getKeyCode()] = true;
+        }
     }
     
     /**
