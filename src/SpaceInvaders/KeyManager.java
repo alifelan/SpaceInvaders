@@ -13,16 +13,24 @@ import java.awt.event.KeyListener;
  * @author antoniomejorado
  */
 public class KeyManager implements KeyListener {
-    
-    public boolean up;      // flag to move up the player
-    public boolean down;    // flag to move down the player
-    public boolean left;    // flag to move left the player
-    public boolean right;   // flag to move right the player
 
-    private boolean keys[];  // to store all the flags for every key
+    private final boolean releasedKeys[];
+    private final boolean pressedKeys[];
+    private final boolean releasedKeysQuery[];
+    private static final int SIZE = 256;
+    private static KeyManager instance = null;
     
     public KeyManager() {
-        keys = new boolean[256];
+        releasedKeys = new boolean[SIZE];
+        pressedKeys = new boolean[SIZE];
+        releasedKeysQuery = new boolean[SIZE];
+        instance = this;
+    }
+    
+    public static KeyManager getInstance() {
+        if(instance == null)
+            instance = new KeyManager();
+        return instance;
     }
     
     @Override
@@ -31,23 +39,31 @@ public class KeyManager implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        // set true to every key pressed
-        keys[e.getKeyCode()] = true;
+        // set true if key was pressed
+        pressedKeys[e.getKeyCode()] = true;
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        // set false to every key released
-        keys[e.getKeyCode()] = false;
+        pressedKeys[e.getKeyCode()] = false;
+        releasedKeys[e.getKeyCode()] = true;
     }
     
     /**
      * to enable or disable moves on every tick
      */
     public void tick() {
-        up = keys[KeyEvent.VK_UP];
-        down = keys[KeyEvent.VK_DOWN];
-        left = keys[KeyEvent.VK_LEFT];
-        right = keys[KeyEvent.VK_RIGHT];
+        System.arraycopy(releasedKeys, 0, releasedKeysQuery, 0, SIZE);
+        for(int i=0; i<releasedKeys.length; i++) {
+            releasedKeys[i] = false;
+        }
+    }
+    
+    public boolean isPressed(int key) {
+        return pressedKeys[key];
+    }
+    
+    public boolean isReleased(int key) {
+        return releasedKeysQuery[key];
     }
 }
