@@ -17,21 +17,28 @@ public class Player extends Item{
 
     private final int MOVE_LEFT_KEY;
     private final int MOVE_RIGHT_KEY;
+    private final int SHOOT;
     private int speed;    
+    private int direction = 1;
+    private Timer timer;
 
-    private Animation idleRight;
-    private Animation idleLeft;
-    private Animation moveRight;
-    private Animation moveLeft;
-    private Animation attackRight;
-    private Animation attackLeft;
-    private Animation loseRight;
-    private Animation win;
+    private final Animation idleRight;
+    private final Animation idleLeft;
+    private final Animation moveRight;
+    private final Animation moveLeft;
+    private final Animation attackRight;
+    private final Animation attackLeft;
+    private final Animation loseRight;
+    private final Animation loseLeft;
+    private final Animation win;
 
+    private Animation current;
+    
     public Player(int x, int y, int width, int height, int speed) {
         super(x, y, width, height);
         MOVE_LEFT_KEY = KeyEvent.VK_LEFT;
         MOVE_RIGHT_KEY = KeyEvent.VK_RIGHT;
+        SHOOT = KeyEvent.VK_SPACE;
 
         idleRight = new Animation(Assets.playerIdleRight, 100);
         idleLeft = new Animation(Assets.playerIdleLeft, 100);
@@ -40,9 +47,11 @@ public class Player extends Item{
         attackRight = new Animation(Assets.playerAttackRight, 100);
         attackLeft = new Animation(Assets.playerAttackLeft, 100);
         loseRight = new Animation(Assets.playerLoseRight, 100);
+        loseLeft = new Animation(Assets.playerLoseLeft, 100);
         win = new Animation(Assets.playerWin, 100);
 
         this.speed = speed;
+        direction = 0;
     }
     
     public void checkBounds(Game game) {
@@ -59,15 +68,39 @@ public class Player extends Item{
         KeyManager keyManager = KeyManager.getInstance();
         if(keyManager.isPressed(MOVE_LEFT_KEY)) {
             setX(getX() - speed);
-        }
-        if(keyManager.isPressed(MOVE_RIGHT_KEY)) {
+            current = moveLeft;
+            direction = 1;
+        } 
+        else if(keyManager.isPressed(MOVE_RIGHT_KEY)) {
             setX(getX() + speed);
+            current = moveRight;
+            direction = 0;
+        } else {
+            if(direction == 1) {
+                current = idleLeft;
+            } else {
+                current = idleRight;
+            }
         }
-        win.tick();
+        if(keyManager.isReleased(SHOOT) && (timer == null || timer.isFinished())) {
+            timer = new Timer(500);
+        }
+        if(timer != null) {
+            timer.tick();
+            if(!timer.isFinished()) {
+                if(direction == 1) {
+                    current = attackLeft;
+                } else {
+                    current = attackRight;
+                }
+            }
+        }
+        current.tick();
     }
 
     @Override
     public void render(Graphics g) {
-
+        g.drawImage(current.getCurrentFrame(), getX(), getY(), 
+                getWidth(), getHeight(), null);
     }
 }
