@@ -72,9 +72,9 @@ public class Player extends Item{
         if(bulletGen.isFinished()){
             bulletGen = null;
             if(direction == 1){
-                return new Bullet(getX() + 10, getY(), 40, 40, 2);
+                return new Bullet(getX() + 10, getY(), 40, 40, Bullet.PLAYER_BULLET);
             } else {
-                return new Bullet(getX() + getWidth() - 50, getY(), 40, 40, 2);
+                return new Bullet(getX() + getWidth() - 50, getY(), 40, 40, Bullet.PLAYER_BULLET);
             }
         }
         return null;
