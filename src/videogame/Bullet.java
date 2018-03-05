@@ -32,7 +32,7 @@ public class Bullet extends Item{
 
     @Override
     public void tick() {
-        setY(getY() - SPEED*type);
+        setY(getY() + SPEED*type);
     }
 
     @Override
