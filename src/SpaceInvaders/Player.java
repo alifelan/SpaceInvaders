@@ -52,19 +52,6 @@ public class Player extends Item{
 
     @Override
     public void tick() {
-        // moving player depending on flags
-        if (game.getKeyManager().up) {
-           setY(getY() - 1);
-        }
-        if (game.getKeyManager().down) {
-           setY(getY() + 1);
-        }
-        if (game.getKeyManager().left) {
-           setX(getX() - 1);
-        }
-        if (game.getKeyManager().right) {
-           setX(getX() + 1);
-        }
         // reset x position and y position if colision
         if (getX() + 60 >= game.getWidth()) {
             setX(game.getWidth() - 60);
