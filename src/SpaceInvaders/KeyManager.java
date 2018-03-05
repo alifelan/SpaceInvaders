@@ -17,12 +17,20 @@ public class KeyManager implements KeyListener {
     private final boolean releasedKeys[];
     private final boolean pressedKeys[];
     private final boolean releasedKeysQuery[];
-    private static final int arraySize = 256;
+    private static final int SIZE = 256;
+    private static KeyManager instance = null;
     
     public KeyManager() {
-        releasedKeys = new boolean[arraySize];
-        pressedKeys = new boolean[arraySize];
-        releasedKeysQuery = new boolean[arraySize];
+        releasedKeys = new boolean[SIZE];
+        pressedKeys = new boolean[SIZE];
+        releasedKeysQuery = new boolean[SIZE];
+        instance = this;
+    }
+    
+    public static KeyManager getInstance() {
+        if(instance == null)
+            instance = new KeyManager();
+        return instance;
     }
     
     @Override
@@ -45,7 +53,7 @@ public class KeyManager implements KeyListener {
      * to enable or disable moves on every tick
      */
     public void tick() {
-        System.arraycopy(releasedKeys, 0, releasedKeysQuery, 0, arraySize);
+        System.arraycopy(releasedKeys, 0, releasedKeysQuery, 0, SIZE);
         for(int i=0; i<releasedKeys.length; i++) {
             releasedKeys[i] = false;
         }
