@@ -8,6 +8,7 @@ package videogame;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
+import java.util.ArrayList;
 
 /**
  *
@@ -24,6 +25,7 @@ public class Game implements Runnable {
     private boolean running;        // to set the game
     private Player player;          // to use a player
     private final KeyManager keyManager;  // to manage the keyboard
+    private final ArrayList<Bullet> bullets;
     
     
     /**
@@ -38,6 +40,7 @@ public class Game implements Runnable {
         this.height = height;
         running = false;
         keyManager = new KeyManager();
+        bullets = new ArrayList<>();
     }
 
     /**
@@ -132,7 +135,7 @@ public class Game implements Runnable {
     }
     
     /**
-     * setting the thead for the game
+     * setting the thread for the game
      */
     public synchronized void start() {
         if (!running) {
