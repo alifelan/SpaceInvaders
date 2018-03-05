@@ -31,7 +31,6 @@ public class Assets {
         }
         for(int i=0; i<4; i++) {
             menu[112+i] = menuSheet.crop(34*14, 34*(4+i), 34, 34);
-            System.out.println(34*(4+i));
         }
     }
     
