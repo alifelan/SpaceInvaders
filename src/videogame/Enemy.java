@@ -14,9 +14,14 @@ import java.awt.Graphics;
 public class Enemy extends Item {
     
     private static int SPEED = 2;
+    public static int TYPE_1 = 1;
+    public static int TYPE_2 = 2;
+    public static int TYPE_3 = 3;
+    private final int type;
     
-    public Enemy(int x, int y, int width, int height) {
+    public Enemy(int x, int y, int width, int height, int type) {
         super(x,y,width,height);
+        this.type = type;
     }
 
     @Override
