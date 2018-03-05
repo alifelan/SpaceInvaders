@@ -13,7 +13,6 @@ import java.awt.image.BufferedImage;
  */
 public class Assets {
     public static BufferedImage background; // to store background image
-    public static BufferedImage player;     // to store the player image
 
     /**
      * initializing the images of the game
@@ -23,7 +22,6 @@ public class Assets {
         SpriteSheet chefLeft = new SpriteSheet(ImageLoader.loadImage("/images/chefLeft.png"));
         SpriteSheet menu = new SpriteSheet(ImageLoader.loadImage("/images/menu.png"));
         background = ImageLoader.loadImage("/images/Background.jpg");
-        player = ImageLoader.loadImage("/images/mario.png");
     }
     
 }
