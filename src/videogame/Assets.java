@@ -96,7 +96,7 @@ public class Assets {
         menu = new BufferedImage[116];
         for(int i=0; i<8; i++) {
             for(int j=0; j<14; j++) {
-                menu[i*8+j] = menuSheet.crop(34*j, 34*i, 34, 34);
+                menu[i*14+j] = menuSheet.crop(34*j, 34*i, 34, 34);
             }
         }
         for(int i=0; i<4; i++) {

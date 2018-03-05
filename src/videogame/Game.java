@@ -10,6 +10,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 
+
 /**
  *
  * @author antoniomejorado
@@ -109,6 +110,18 @@ public class Game implements Runnable {
         // avancing player with colision
         player.tick();
         player.checkBounds(this);
+        for(int i = 0; i < bullets.size(); i++){
+            Bullet bullet = bullets.get(i);
+            bullet.tick();
+            if(bullet.isOutOfBounds(this)) {
+                bullets.remove(i);
+                i--;
+            } 
+        }
+        Bullet bullet = player.createBullet();
+        if(bullet != null){
+            bullets.add(bullet);
+        }
     }
     
     private void render() {
@@ -128,6 +141,9 @@ public class Game implements Runnable {
             g = bs.getDrawGraphics();
             g.drawImage(Assets.background, 0, 0, width, height, null);
             player.render(g);
+            for(Bullet bullet : bullets){
+                bullet.render(g);
+            }
             bs.show();
             g.dispose();
         }

@@ -27,12 +27,12 @@ public class Bullet extends Item{
     }
     
     public boolean isOutOfBounds(Game game) {
-        return getY() < 0 || (getY() + getWidth()) > game.getHeight();
+        return getY() + getHeight() < 0;
     }
 
     @Override
     public void tick() {
-        setY(getY() + SPEED*type);
+        setY(getY() - SPEED*type);
     }
 
     @Override
