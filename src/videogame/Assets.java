@@ -22,6 +22,7 @@ public class Assets {
     public static BufferedImage playerLoseRight[];
     public static BufferedImage playerLoseLeft[];
     public static BufferedImage playerWin[];
+    public static BufferedImage menu[];
 
     /**
      * initializing the images of the game
@@ -38,7 +39,7 @@ public class Assets {
         playerWin = new BufferedImage[20];
         SpriteSheet chefRight = new SpriteSheet(ImageLoader.loadImage("/images/chefRight.png"));
         SpriteSheet chefLeft = new SpriteSheet(ImageLoader.loadImage("/images/chefLeft.png"));
-        SpriteSheet menu = new SpriteSheet(ImageLoader.loadImage("/images/menu.png"));
+        SpriteSheet menuSheet = new SpriteSheet(ImageLoader.loadImage("/images/menu.png"));
         background = ImageLoader.loadImage("/images/Background.jpg");
         playerIdleLeft[0] = chefLeft.crop(494, 7, 57, 50);
         playerIdleLeft[1] = chefLeft.crop(440, 7, 56, 49);
@@ -92,6 +93,15 @@ public class Assets {
         playerWin[17] = chefRight.crop(113, 370, 36, 49);
         playerWin[18] = chefRight.crop(150, 370, 30, 48);
         playerWin[19] = chefRight.crop(179, 370, 40, 48);
+        menu = new BufferedImage[116];
+        for(int i=0; i<8; i++) {
+            for(int j=0; j<14; j++) {
+                menu[i*8+j] = menuSheet.crop(34*j, 34*i, 34, 34);
+            }
+        }
+        for(int i=0; i<4; i++) {
+            menu[112+i] = menuSheet.crop(34*14, 34*(4+i), 34, 34);
+        }
     }
     
 }

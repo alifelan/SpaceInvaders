@@ -17,8 +17,8 @@ public class Player extends Item{
 
     private final int MOVE_LEFT_KEY;
     private final int MOVE_RIGHT_KEY;
-    private final int SHOOT_KEY;
     private int speed;    
+
     private Animation idleRight;
     private Animation idleLeft;
     private Animation moveRight;
@@ -27,11 +27,12 @@ public class Player extends Item{
     private Animation attackLeft;
     private Animation loseRight;
     private Animation win;
+
     public Player(int x, int y, int width, int height, int speed) {
         super(x, y, width, height);
         MOVE_LEFT_KEY = KeyEvent.VK_LEFT;
         MOVE_RIGHT_KEY = KeyEvent.VK_RIGHT;
-        SHOOT_KEY = KeyEvent.VK_SPACE;
+
         idleRight = new Animation(Assets.playerIdleRight, 100);
         idleLeft = new Animation(Assets.playerIdleLeft, 100);
         moveRight = new Animation(Assets.playerMoveRight, 100);
@@ -40,6 +41,7 @@ public class Player extends Item{
         attackLeft = new Animation(Assets.playerAttackLeft, 100);
         loseRight = new Animation(Assets.playerLoseRight, 100);
         win = new Animation(Assets.playerWin, 100);
+
         this.speed = speed;
     }
     
@@ -66,6 +68,6 @@ public class Player extends Item{
 
     @Override
     public void render(Graphics g) {
-        g.drawImage(win.getCurrentFrame(), getX(), getY(), win.getCurrentFrame().getWidth() * 4, win.getCurrentFrame().getHeight() * 4, null);
+
     }
 }
