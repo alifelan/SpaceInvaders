@@ -21,6 +21,7 @@ public class Player extends Item{
     private int speed;    
     private int direction = 1;
     private Timer timer;
+    private Timer bulletGen;
 
     private final Animation idleRight;
     private final Animation idleLeft;
@@ -62,6 +63,22 @@ public class Player extends Item{
             setX(game.getWidth() - getWidth());
         }
     }
+    
+    public Bullet createBullet(){
+        if(bulletGen == null) {
+            return null;
+        }
+        bulletGen.tick();
+        if(bulletGen.isFinished()){
+            bulletGen = null;
+            if(direction == 1){
+                return new Bullet(getX() + 10, getY(), 40, 40, 2);
+            } else {
+                return new Bullet(getX() + getWidth() - 50, getY(), 40, 40, 2);
+            }
+        }
+        return null;
+    }
 
     @Override
     public void tick() {
@@ -83,7 +100,8 @@ public class Player extends Item{
             }
         }
         if(keyManager.isReleased(SHOOT) && (timer == null || timer.isFinished())) {
-            timer = new Timer(500);
+            timer = new Timer(300);
+            bulletGen = new Timer(100);
         }
         if(timer != null) {
             timer.tick();

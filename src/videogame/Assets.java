@@ -32,8 +32,8 @@ public class Assets {
         playerIdleRight = new BufferedImage[4];
         playerMoveRight = new BufferedImage[4];
         playerMoveLeft = new BufferedImage[4];
-        playerAttackRight = new BufferedImage[5];
-        playerAttackLeft = new BufferedImage[5];
+        playerAttackRight = new BufferedImage[3];
+        playerAttackLeft = new BufferedImage[3];
         playerLoseRight = new BufferedImage[3];
         playerLoseLeft = new BufferedImage[3];
         playerWin = new BufferedImage[20];
@@ -42,13 +42,13 @@ public class Assets {
         SpriteSheet menuSheet = new SpriteSheet(ImageLoader.loadImage("/images/menu.png"));
         background = ImageLoader.loadImage("/images/Background.jpg");
         playerIdleLeft[0] = chefLeft.crop(494, 7, 57, 50);
-        playerIdleLeft[1] = chefLeft.crop(440, 7, 56, 49);
-        playerIdleLeft[2] = chefLeft.crop(385, 7, 57, 54);
-        playerIdleLeft[3] = chefLeft.crop(328, 7, 56, 51);
+        playerIdleLeft[1] = chefLeft.crop(440, 7, 56, 50);
+        playerIdleLeft[2] = chefLeft.crop(385, 7, 57, 50);
+        playerIdleLeft[3] = chefLeft.crop(328, 7, 56, 50);
         playerIdleRight[0] = chefRight.crop(6, 7, 57, 50);
-        playerIdleRight[1] = chefRight.crop(63, 7, 56, 49);
-        playerIdleRight[2] = chefRight.crop(118, 7, 53, 51);
-        playerIdleRight[3] = chefRight.crop(172, 7, 56, 48);
+        playerIdleRight[1] = chefRight.crop(63, 7, 56, 50);
+        playerIdleRight[2] = chefRight.crop(118, 7, 53, 50);
+        playerIdleRight[3] = chefRight.crop(172, 7, 56, 50);
         playerMoveRight[0] = chefRight.crop(7, 105, 47, 51);
         playerMoveRight[1] = chefRight.crop(54, 105, 46, 52);
         playerMoveRight[2] = chefRight.crop(102, 105, 60, 50);
@@ -57,16 +57,12 @@ public class Assets {
         playerMoveLeft[1] = chefLeft.crop(455, 105, 47, 50);
         playerMoveLeft[2] = chefLeft.crop(392, 105, 64, 53);
         playerMoveLeft[3] = chefLeft.crop(346, 105, 47, 52);
-        playerAttackRight[0] = chefRight.crop(6, 277, 42, 47);
-        playerAttackRight[1] = chefRight.crop(48, 254, 55, 68);
-        playerAttackRight[2] = chefRight.crop(106, 254, 46, 68);
-        playerAttackRight[3] = chefRight.crop(156, 254, 32, 68);
-        playerAttackRight[4] = chefRight.crop(199, 277, 41, 45);
-        playerAttackLeft[0] = chefLeft.crop(511, 277, 40, 50);
-        playerAttackLeft[1] = chefLeft.crop(452, 254, 57, 69);
-        playerAttackLeft[2] = chefLeft.crop(404, 254, 48, 73);
-        playerAttackLeft[3] = chefLeft.crop(365, 254, 36, 69);
-        playerAttackLeft[4] = chefLeft.crop(316, 277, 42, 49);
+        playerAttackRight[0] = chefRight.crop(48, 254, 55, 68);
+        playerAttackRight[1] = chefRight.crop(106, 254, 46, 68);
+        playerAttackRight[2] = chefRight.crop(156, 254, 32, 68);
+        playerAttackLeft[0] = chefLeft.crop(452, 254, 57, 68);
+        playerAttackLeft[1] = chefLeft.crop(404, 254, 48, 68);
+        playerAttackLeft[2] = chefLeft.crop(365, 254, 36, 68);
         playerLoseRight[0] = chefRight.crop(58, 160, 42, 50);
         playerLoseRight[1] = chefRight.crop(100, 160, 47, 47);
         playerLoseRight[2] = chefRight.crop(219, 171, 56, 38);
@@ -96,7 +92,7 @@ public class Assets {
         menu = new BufferedImage[116];
         for(int i=0; i<8; i++) {
             for(int j=0; j<14; j++) {
-                menu[i*8+j] = menuSheet.crop(34*j, 34*i, 34, 34);
+                menu[i*14+j] = menuSheet.crop(34*j, 34*i, 34, 34);
             }
         }
         for(int i=0; i<4; i++) {
