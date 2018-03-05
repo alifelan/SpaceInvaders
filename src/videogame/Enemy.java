@@ -19,7 +19,6 @@ public class Enemy extends Item {
     public static int TYPE_3 = 3;
     private final int type;
     
-    //comment
     public Enemy(int x, int y, int width, int height, int type) {
         super(x,y,width,height);
         this.type = type;
