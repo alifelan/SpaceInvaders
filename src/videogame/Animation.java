@@ -30,6 +30,14 @@ public class Animation {
         timer = 0;                  // initialize timer
         lastTime = System.currentTimeMillis();  // getting the initial time
     }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
     
     /**
      * Getting the current frame to paint
