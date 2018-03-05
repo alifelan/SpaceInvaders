@@ -17,13 +17,12 @@ public class Player extends Item{
 
     private final int MOVE_LEFT_KEY;
     private final int MOVE_RIGHT_KEY;
-    private final int SHOOT_KEY;
     private int speed;    
+    
     public Player(int x, int y, int width, int height, int speed) {
         super(x, y, width, height);
         MOVE_LEFT_KEY = KeyEvent.VK_LEFT;
         MOVE_RIGHT_KEY = KeyEvent.VK_RIGHT;
-        SHOOT_KEY = KeyEvent.VK_SPACE;
         this.speed = speed;
     }
     
@@ -49,6 +48,6 @@ public class Player extends Item{
 
     @Override
     public void render(Graphics g) {
-        g.drawImage(Assets.player, getX(), getY(), getWidth(), getHeight(), null);
+        g.drawRect(x, y, width, height);
     }
 }
