@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package SpaceInvaders;
+package videogame;
 
 import java.awt.image.BufferedImage;
 
@@ -19,6 +19,9 @@ public class Assets {
      * initializing the images of the game
      */
     public static void init() {
+        SpriteSheet chefRight = new SpriteSheet(ImageLoader.loadImage("/images/chefRight.png"));
+        SpriteSheet chefLeft = new SpriteSheet(ImageLoader.loadImage("/images/chefLeft.png"));
+        SpriteSheet menu = new SpriteSheet(ImageLoader.loadImage("/images/menu.png"));
         background = ImageLoader.loadImage("/images/Background.jpg");
         player = ImageLoader.loadImage("/images/mario.png");
     }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package SpaceInvaders;
+package videogame;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -18,12 +18,12 @@ public class Game implements Runnable {
     private Graphics g;             // to paint objects
     private Display display;        // to display in the game
     String title;                   // title of the window
-    private int width;              // width of the window
-    private int height;             // height of the window
+    private final int width;              // width of the window
+    private final int height;             // height of the window
     private Thread thread;          // thread to create the game
     private boolean running;        // to set the game
     private Player player;          // to use a player
-    private KeyManager keyManager;  // to manage the keyboard
+    private final KeyManager keyManager;  // to manage the keyboard
     
     
     /**
@@ -62,7 +62,7 @@ public class Game implements Runnable {
     private void init() {
          display = new Display(title, getWidth(), getHeight());  
          Assets.init();
-         player = new Player(0, getHeight() - 100, 1, 100, 100, this);
+         player = new Player(0, getHeight() - 100, 100, 150, 3);
          display.getJframe().addKeyListener(keyManager);
     }
     
@@ -105,6 +105,7 @@ public class Game implements Runnable {
         keyManager.tick();
         // avancing player with colision
         player.tick();
+        player.checkBounds(this);
     }
     
     private void render() {
