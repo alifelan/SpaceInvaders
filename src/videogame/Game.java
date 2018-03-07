@@ -167,7 +167,10 @@ public class Game implements Runnable {
         }
         if(paused) {
             if(keyManager.isReleased(LOAD_KEY)){
-                
+                load();
+            }
+            if(keyManager.isReleased(SAVE_KEY)){
+                save();
             }
             return;
         }
