@@ -13,6 +13,7 @@ import java.util.ArrayList;
  * @author Ali
  */
 public class EnemyBlock {
+
     private ArrayList<ArrayList<Enemy>> enemies;
     private Timer timer;
     private ArrayList<Timer> timers;
@@ -59,37 +60,41 @@ public class EnemyBlock {
         }
         return false;
     }
-    
-    public void tick(){
-        for(ArrayList<Enemy> column : enemies){
-            for(Enemy enemy : column){
+
+    public void tick() {
+        for (ArrayList<Enemy> column : enemies) {
+            for (Enemy enemy : column) {
                 enemy.tick();
             }
         }
         timer.tick();
-        if(timer.isFinished()){
-            if(Enemy.getDirection() == 0){
-                timer = new Timer(500);
-                Enemy.setDirection(2);
-            } else if(Enemy.getDirection() == 1){
-                timer = new Timer(500);
-                Enemy.setDirection(3);
-            } else if(Enemy.getDirection() == 2){
-                timer = new Timer(5800);
-                Enemy.setDirection(1);
-            } else {
-                timer = new Timer(5800);
-                Enemy.setDirection(0);
+        if (timer.isFinished()) {
+            switch (Enemy.getDirection()) {
+                case 0:
+                    timer = new Timer(500);
+                    Enemy.setDirection(2);
+                    break;
+                case 1:
+                    timer = new Timer(500);
+                    Enemy.setDirection(3);
+                    break;
+                case 2:
+                    timer = new Timer(5800);
+                    Enemy.setDirection(1);
+                    break;
+                default:
+                    timer = new Timer(5800);
+                    Enemy.setDirection(0);
             }
         }
         for(Timer timer2 : timers){
             timer2.tick();
         }
     }
-    
-    public void render(Graphics g){
-        for(ArrayList<Enemy> column : enemies){
-            for(Enemy enemy : column){
+
+    public void render(Graphics g) {
+        for (ArrayList<Enemy> column : enemies) {
+            for (Enemy enemy : column) {
                 enemy.render(g);
             }
         }
