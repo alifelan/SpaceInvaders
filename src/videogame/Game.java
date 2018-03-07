@@ -38,6 +38,7 @@ public class Game implements Runnable {
     private Player player;          // to use a player
     private final KeyManager keyManager;  // to manage the keyboard
     private final ArrayList<Bullet> bullets;
+    private final ArrayList<ArrayList<ShieldPiece>> shields;
     private EnemyBlock enemyBlock;
     private Timer winTimer;
     
@@ -60,6 +61,7 @@ public class Game implements Runnable {
         SAVE_KEY = KeyEvent.VK_S;
         RESET_KEY = KeyEvent.VK_R;
         winTimer = null;
+        shields = new ArrayList<>();
     }
 
     /**
@@ -86,6 +88,13 @@ public class Game implements Runnable {
          Assets.init();
          player = new Player(getWidth() / 2 - 35, getHeight() - 170, 70, 100, 4);
          enemyBlock = new EnemyBlock(getWidth(), getHeight());
+         for(int i=0; i<3; i++) {
+             shields.add(new ArrayList<>());
+             int x = i*getWidth()/3 + getWidth()/6 - 75;
+             for(int j=0; j<10; j++) {
+                 shields.get(i).add(new ShieldPiece(x+j*15, getHeight() - 200, 15, 15));
+             }
+         }
          display.getJframe().addKeyListener(keyManager);
     }
     
@@ -202,6 +211,21 @@ public class Game implements Runnable {
             shot.forEach((bullet1) -> {
                 bullets.add(bullet1);
             });
+            for(ArrayList<ShieldPiece> shield : shields) {
+                for(int i=0; i<shield.size(); i++) {
+                    for(int j=0; j<bullets.size(); j++) {
+                        if(shield.get(i).intersects(bullets.get(j))) {
+                            shield.get(i).setLives(shield.get(i).getLives() - 1);
+                            bullets.remove(j);
+                            break;
+                        }
+                    }
+                    if(shield.get(i).getLives() == 0) {
+                        shield.remove(i);
+                        i--;
+                    }
+                }
+            }
         } else{
             bullets.clear();
             if(keyManager.isReleased(RESET_KEY)){
@@ -239,6 +263,11 @@ public class Game implements Runnable {
             enemyBlock.render(g);
             for(Bullet bullet : bullets){
                 bullet.render(g);
+            }
+            for(ArrayList<ShieldPiece> shield : shields) {
+                for(ShieldPiece piece : shield) {
+                    piece.render(g);
+                }
             }
             g.setColor(Color.WHITE);
             g.setFont(new Font(g.getFont().getFontName(), Font.PLAIN, 40));
