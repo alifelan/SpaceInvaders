@@ -129,7 +129,7 @@ public class Game implements Runnable {
         for(int i = 0; i < bullets.size(); i++){
             Bullet bullet = bullets.get(i);
             bullet.tick();
-            if(bullet.isOutOfBounds(this)) {
+            if(bullet.isOutOfBounds(this) || enemyBlock.hasCrashed(bullet)) {
                 bullets.remove(i);
                 i--;
             } 
@@ -137,6 +137,10 @@ public class Game implements Runnable {
         Bullet bullet = player.createBullet();
         if(bullet != null){
             bullets.add(bullet);
+        }
+        ArrayList<Bullet> shot = enemyBlock.shoot();
+        for(Bullet bullet1 : shot){
+            bullets.add(bullet1);
         }
     }
     
@@ -162,7 +166,7 @@ public class Game implements Runnable {
                 bullet.render(g);
             }
             if(paused) {
-                g.drawImage(Assets.pause, 0, 0, width, height, null);
+                g.drawImage(Assets.pause, 100, 100, width- 200, height - 200, null);
             }
             bs.show();
             g.dispose();
