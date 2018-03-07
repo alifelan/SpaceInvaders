@@ -135,6 +135,7 @@ public class Game implements Runnable {
                     piece.save(writer);
                 }
             }
+            boost.save(writer);
             writer.close();
         } catch (IOException ioe) {
             ioe.printStackTrace();
@@ -161,6 +162,7 @@ public class Game implements Runnable {
                     shields.get(i).add(ShieldPiece.load(sToInt(reader.readLine())));
                 }
             }
+            boost = Boost.load(sToInt(reader.readLine()));
             reader.close();
         } catch (IOException ioe) {
             ioe.printStackTrace();
