@@ -29,6 +29,7 @@ public class Player extends Item {
     public boolean winner;  // to know if the player has winned
     private final SoundClip lose;   // to play the sound when the player loses
     private final SoundClip winSound;    // to play when the player wins
+    private final SoundClip hit;    // to play when the player is hit
 
     // to animate the player
     private final Animation idleRight;
@@ -77,6 +78,7 @@ public class Player extends Item {
         winTimer = null;
         lose = new SoundClip("/sounds/ramsayInsult.wav");
         winSound = new SoundClip("/sounds/win.wav");
+        hit = new SoundClip("/sounds/hit.wav");
     }
 
     /**
@@ -187,6 +189,13 @@ public class Player extends Item {
         }
         return null;
     }
+    
+    /**
+     * To stop the sound
+     */
+    public void stopLose(){
+        lose.stop();
+    }
 
     /**
      * Saves the player
@@ -294,6 +303,7 @@ public class Player extends Item {
         if (super.intersects(item)) {
             // takes one live out if the player collided
             lives--;
+            hit.play();
             return true;
         }
         return false;
