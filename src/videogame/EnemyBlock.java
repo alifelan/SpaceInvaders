@@ -42,6 +42,10 @@ public class EnemyBlock {
         }
         return true;
     }
+
+    public Timer getTimer() {
+        return timer;
+    }
     
     public ArrayList<Bullet> shoot(){
         ArrayList<Bullet> bullets = new ArrayList<>();

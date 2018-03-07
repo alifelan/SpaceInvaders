@@ -121,6 +121,7 @@ public class Game implements Runnable {
         // avancing player with colision
         if(keyManager.isReleased(PAUSED_KEY)) {
             paused = !paused;
+            enemyBlock.getTimer().setLastTime();
         }
         if(paused) {
             return;
@@ -157,9 +158,12 @@ public class Game implements Runnable {
                 reset();
             }
         }
-        if(enemyBlock.isEmpty()){
+        if(enemyBlock.isEmpty() && !player.isWinner()){
             winTimer = new Timer(1990);
             player.setWinner(true);
+        }
+        if(player.isWinner()){
+            winTimer.tick();
         }
         
     }
@@ -197,7 +201,7 @@ public class Game implements Runnable {
             }
             if(winTimer != null && winTimer.isFinished()){
                 g.drawString("Press SPACE to play again", 
-                    getWidth() - getWidth()/5, getHeight() / 2);
+                    100, getHeight() / 2);
             }
             bs.show();
             g.dispose();
