@@ -43,6 +43,7 @@ public class Game implements Runnable {
     private Boost boost;            // to store boost
     private final SoundClip shieldHit;  // to play sound when the shield is hit
     private final SoundClip shoot;  // to play when someone shoots
+
     /**
      * to create title, width and height and set the game is still not running
      *
@@ -103,8 +104,10 @@ public class Game implements Runnable {
         }
         display.getJframe().addKeyListener(keyManager);
     }
+
     /**
      * Splits a string into integer tokens
+     *
      * @param s string from the file
      * @return array of integers
      */
@@ -116,7 +119,7 @@ public class Game implements Runnable {
         }
         return tokens;
     }
-    
+
     /**
      * Calls every save method from the pbjects
      */
@@ -141,7 +144,7 @@ public class Game implements Runnable {
             ioe.printStackTrace();
         }
     }
-    
+
     /**
      * Loads objects
      */
@@ -203,13 +206,13 @@ public class Game implements Runnable {
     private void tick() {
         keyManager.tick();
         // checks if the user pressed pause
-        if(keyManager.isReleased(PAUSED_KEY)) {
+        if (keyManager.isReleased(PAUSED_KEY)) {
             paused = !paused;
             enemyBlock.getTimer().setLastTime();
         }
         // Saves or loads if the player pressed the key
-        if(paused) {
-            if(keyManager.isReleased(LOAD_KEY)){
+        if (paused) {
+            if (keyManager.isReleased(LOAD_KEY)) {
                 load();
             }
             if (keyManager.isReleased(SAVE_KEY)) {
@@ -219,7 +222,7 @@ public class Game implements Runnable {
         }
         player.tick();
         // moves everything if the game is going
-        if(player.getLives() > 0 && !player.isWinner()) {
+        if (player.getLives() > 0 && !player.isWinner()) {
             player.checkBounds(this);
             enemyBlock.tick();
             boost.tick();
@@ -227,8 +230,8 @@ public class Game implements Runnable {
                 Bullet bullet = bullets.get(i);
                 bullet.tick();
                 // checks if the bullet is out, or if it hits something depending on its type
-                if(bullet.isOutOfBounds(this) || (bullet.getType() == Bullet.ENEMY_BULLET && 
-                        player.intersects(bullet))) {
+                if (bullet.isOutOfBounds(this) || (bullet.getType() == Bullet.ENEMY_BULLET
+                        && player.intersects(bullet))) {
                     bullets.remove(i);
                     i--;
                 } else if (bullet.getType() == Bullet.PLAYER_BULLET
@@ -236,7 +239,7 @@ public class Game implements Runnable {
                     player.setScore(player.getScore() + 100);
                     bullets.remove(i);
                     i--;
-                } else if(bullet.intersects(boost)) {
+                } else if (bullet.intersects(boost)) {
                     bullets.remove(i);
                     i--;
                     boost.crash(player);
@@ -252,7 +255,7 @@ public class Game implements Runnable {
             ArrayList<Bullet> shot = enemyBlock.shoot();
             shot.forEach((bullet1) -> {
                 bullets.add(bullet1);
-                if(bullet == null){
+                if (bullet == null) {
                     shoot.play();
                 }
             });
@@ -277,8 +280,8 @@ public class Game implements Runnable {
             }
         } else {
             bullets.clear();
-            if(keyManager.isReleased(RESET_KEY)){
-                if(player.getLives() <= 0){
+            if (keyManager.isReleased(RESET_KEY)) {
+                if (player.getLives() <= 0) {
                     reset();
                 } else {
                     continueGame();
@@ -286,14 +289,15 @@ public class Game implements Runnable {
             }
         }
         // checks if the player won
-        if(enemyBlock.isEmpty() && !player.isWinner()){
+        if (enemyBlock.isEmpty() && !player.isWinner()) {
             player.setWinner(true);
             bullets.clear();
         }
         // checks if the player lost by having enemies on the ground
-        if(enemyBlock.isOnGround() && player.getLives() > 0)
+        if (enemyBlock.isOnGround() && player.getLives() > 0) {
             player.setLives(0);
         }
+    }
 
     private void render() {
         // get the buffer strategy from the display
@@ -330,26 +334,27 @@ public class Game implements Runnable {
             if (paused) {
                 g.drawImage(Assets.pause, 100, 100, width - 200, height - 200, null);
             }
-            if(player.isWinner()){
-                g.drawString("Press 'R' to play continue", 
-                    getWidth()/3, getHeight() / 2);
-            } else if(player.getLives() <= 0){
-                g.drawString("Press 'R' to play again", 
-                    getWidth()/3, getHeight() / 2);
+            if (player.isWinner()) {
+                g.drawString("Press 'R' to play continue",
+                        getWidth() / 3, getHeight() / 2);
+            } else if (player.getLives() <= 0) {
+                g.drawString("Press 'R' to play again",
+                        getWidth() / 3, getHeight() / 2);
             }
             bs.show();
             g.dispose();
         }
     }
-    
+
     /**
      * Prepares the game for the player to keep on
      */
-    public void continueGame(){
+    public void continueGame() {
         enemyBlock = new EnemyBlock(getWidth(), getHeight());
         player.setWinner(false);
+        boost = new Boost(0, 0, 35, 35);
     }
-    
+
     /**
      * Restarts the game
      */
@@ -358,13 +363,14 @@ public class Game implements Runnable {
         player = new Player(getWidth() / 2 - player.getWidth() / 2, getHeight() - 170, 70, 100, 4);
         enemyBlock = new EnemyBlock(getWidth(), getHeight());
         Assets.reset();
-              for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) {
             shields.add(new ArrayList<>());
             int x = i * getWidth() / 3 + getWidth() / 6 - 75;
             for (int j = 0; j < 10; j++) {
                 shields.get(i).add(new ShieldPiece(x + j * 15, getHeight() - 200, 15, 15));
             }
         }
+        boost = new Boost(0, 0, 35, 35);
     }
 
     /**
