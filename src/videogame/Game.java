@@ -35,7 +35,7 @@ public class Game implements Runnable {
     private final KeyManager keyManager;  // to manage the keyboard
     private final ArrayList<Bullet> bullets;
     private EnemyBlock enemyBlock;
-    
+    private Timer winTimer;
     
     /**
      * to create title, width and height and set the game is still not running
@@ -55,6 +55,7 @@ public class Game implements Runnable {
         LOAD_KEY = KeyEvent.VK_L;
         SAVE_KEY = KeyEvent.VK_S;
         RESET_KEY = KeyEvent.VK_R;
+        winTimer = null;
     }
 
     /**
@@ -79,7 +80,7 @@ public class Game implements Runnable {
     private void init() {
          display = new Display(title, getWidth(), getHeight());  
          Assets.init();
-         player = new Player(0, getHeight() - 170, 100, 150, 4);
+         player = new Player(getWidth() / 2 - 35, getHeight() - 170, 70, 100, 4);
          enemyBlock = new EnemyBlock(getWidth(), getHeight());
          display.getJframe().addKeyListener(keyManager);
     }
@@ -120,25 +121,51 @@ public class Game implements Runnable {
         // avancing player with colision
         if(keyManager.isReleased(PAUSED_KEY)) {
             paused = !paused;
+            enemyBlock.getTimer().setLastTime();
         }
         if(paused) {
             return;
         }
         player.tick();
-        player.checkBounds(this);
-        enemyBlock.tick();
-        for(int i = 0; i < bullets.size(); i++){
-            Bullet bullet = bullets.get(i);
-            bullet.tick();
-            if(bullet.isOutOfBounds(this)) {
-                bullets.remove(i);
-                i--;
-            } 
+        if(player.getLives() > 0) {
+            player.checkBounds(this);
+            enemyBlock.tick();
+            for(int i = 0; i < bullets.size(); i++){
+                Bullet bullet = bullets.get(i);
+                bullet.tick();
+                if(bullet.isOutOfBounds(this) || (bullet.getType() == Bullet.ENEMY_BULLET && 
+                        player.intersects(bullet))) {
+                    bullets.remove(i);
+                    i--;
+                } else if(bullet.getType() == Bullet.PLAYER_BULLET && 
+                        enemyBlock.hasCrashed(bullet)){
+                    player.setScore(player.getScore() + 100);
+                    bullets.remove(i);
+                    i--;
+                }
+            }
+            Bullet bullet = player.createBullet();
+            if(bullet != null){
+                bullets.add(bullet);
+            }
+            ArrayList<Bullet> shot = enemyBlock.shoot();
+            shot.forEach((bullet1) -> {
+                bullets.add(bullet1);
+            });
+        } else{
+            bullets.clear();
+            if(keyManager.isReleased(RESET_KEY)){
+                reset();
+            }
         }
-        Bullet bullet = player.createBullet();
-        if(bullet != null){
-            bullets.add(bullet);
+        if(enemyBlock.isEmpty() && !player.isWinner()){
+            winTimer = new Timer(1990);
+            player.setWinner(true);
         }
+        if(player.isWinner()){
+            winTimer.tick();
+        }
+        
     }
     
     private void render() {
@@ -170,12 +197,21 @@ public class Game implements Runnable {
                 g.drawImage(Assets.lives, i*40+20, getHeight()-40, 40, 40, null);
             }
             if(paused) {
-                g.drawImage(Assets.pause, 0, 0, width, height, null);
+                g.drawImage(Assets.pause, 100, 100, width- 200, height - 200, null);
+            }
+            if(winTimer != null && winTimer.isFinished()){
+                g.drawString("Press SPACE to play again", 
+                    100, getHeight() / 2);
             }
             bs.show();
             g.dispose();
         }
        
+    }
+    
+    public void reset() {
+        player = new Player(getWidth() / 2 - player.getWidth() / 2, getHeight() - 170, 70, 100, 4);
+        enemyBlock = new EnemyBlock(getWidth(), getHeight());
     }
     
     /**

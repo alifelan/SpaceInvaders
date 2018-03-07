@@ -21,6 +21,10 @@ public class Timer {
         timer = 0;
     }
     
+    public void setLastTime(){
+        lastTime = System.currentTimeMillis();
+    }
+    
     public void tick() {
         timer += System.currentTimeMillis() - lastTime;
         lastTime = System.currentTimeMillis();
