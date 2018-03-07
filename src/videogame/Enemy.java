@@ -52,8 +52,8 @@ public class Enemy extends Item {
     }
 
     public Bullet createBullet() {
-        int prob = (int)(Math.random()*100);
-        if(prob < 99) {
+        int prob = (int)(Math.random()*1000);
+        if(prob < 999) {
             return null;
         }
         return new Bullet(getX() + getWidth()/2-10, getY() + getHeight(), 
