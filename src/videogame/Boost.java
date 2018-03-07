@@ -39,6 +39,11 @@ public class Boost extends Item {
     
     public void crash(Player player) {
         setY(-100);
+        if(Math.random() > 0.5){
+            player.setSpeed(player.getSpeed() + 2);
+        } else {
+            player.setLives(player.getLives() + player.getLives() / 2 + 1);
+        }
     }
 
     @Override
