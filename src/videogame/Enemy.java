@@ -6,6 +6,7 @@
 package videogame;
 
 import java.awt.Graphics;
+import java.io.PrintWriter;
 
 /**
  *
@@ -57,6 +58,16 @@ public class Enemy extends Item {
         }
         return new Bullet(getWidth()/2-10, getY() + getHeight(), 
                 20, 20, Bullet.ENEMY_BULLET);
+    }
+    
+    @Override
+    public void save(PrintWriter writer) {
+        super.save(writer);
+        writer.println(","+type);
+    }
+    
+    public static Enemy load(int[] tokens) {
+        return new Enemy(tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]);
     }
     
     @Override

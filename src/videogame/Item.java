@@ -8,6 +8,7 @@ package videogame;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.io.PrintWriter;
 
 /**
  *
@@ -95,6 +96,10 @@ public abstract class Item {
      */
     protected Rectangle getBounds() {
         return new Rectangle(getX(), getY(), getWidth(), getHeight());
+    }
+    
+    public void save(PrintWriter writer) {
+        writer.print(""+getX()+","+getY()+","+getWidth()+","+getHeight());
     }
     
     /**

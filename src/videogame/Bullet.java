@@ -7,6 +7,7 @@ package videogame;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.io.PrintWriter;
 
 /**
  *
@@ -29,6 +30,16 @@ public class Bullet extends Item{
     public boolean isOutOfBounds(Game game) {
         return getY() + getHeight() < 0 || 
                 getY() - getHeight() > game.getHeight();
+    }
+    
+    @Override
+    public void save(PrintWriter writer) {
+        super.save(writer);
+        writer.println(","+type);
+    }
+    
+    public static Bullet load(int[] tokens) {
+        return new Bullet(tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]);
     }
 
     @Override
