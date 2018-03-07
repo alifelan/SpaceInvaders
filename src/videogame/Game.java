@@ -7,6 +7,7 @@ package videogame;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 
@@ -24,6 +25,11 @@ public class Game implements Runnable {
     private final int height;             // height of the window
     private Thread thread;          // thread to create the game
     private boolean running;        // to set the game
+    private boolean paused;         // flag that checks if game is paused
+    private final int PAUSED_KEY;
+    private final int LOAD_KEY;
+    private final int SAVE_KEY;
+    private final int RESET_KEY;
     private Player player;          // to use a player
     private final KeyManager keyManager;  // to manage the keyboard
     private final ArrayList<Bullet> bullets;
@@ -42,6 +48,11 @@ public class Game implements Runnable {
         running = false;
         keyManager = new KeyManager();
         bullets = new ArrayList<>();
+        paused = false;
+        PAUSED_KEY = KeyEvent.VK_P;
+        LOAD_KEY = KeyEvent.VK_L;
+        SAVE_KEY = KeyEvent.VK_S;
+        RESET_KEY = KeyEvent.VK_R;
     }
 
     /**
@@ -100,14 +111,16 @@ public class Game implements Runnable {
         }
         stop();
     }
-
-    public KeyManager getKeyManager() {
-        return keyManager;
-    }
     
     private void tick() {
         keyManager.tick();
         // avancing player with colision
+        if(keyManager.isReleased(PAUSED_KEY)) {
+            paused = !paused;
+        }
+        if(paused) {
+            return;
+        }
         player.tick();
         player.checkBounds(this);
         for(int i = 0; i < bullets.size(); i++){
