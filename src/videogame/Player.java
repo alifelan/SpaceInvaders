@@ -21,6 +21,7 @@ public class Player extends Item {
     private int speed;
     private int direction = 1;
     private int score;
+    private int lives;
     private Timer timer;
     private Timer bulletGen;
 
@@ -56,9 +57,18 @@ public class Player extends Item {
         this.speed = speed;
         direction = 0;
         score = 0;
+        lives = 3;
         timer = new Timer(0);
     }
 
+    public int getLives() {
+        return lives;
+    }
+
+    public void setLives(int lives) {
+        this.lives = lives;
+    }
+    
     public int getScore() {
         return score;
     }
@@ -126,7 +136,7 @@ public class Player extends Item {
         frame = current.getCurrentFrame();
         setWidth(3 * frame.getWidth());
         setHeight(3 * frame.getHeight());
-        setY(690 - getHeight());
+        setY(660 - getHeight());
     }
 
     @Override
