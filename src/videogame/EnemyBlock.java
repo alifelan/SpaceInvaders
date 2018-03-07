@@ -17,10 +17,15 @@ import java.util.ArrayList;
  */
 public class EnemyBlock {
 
-    private ArrayList<ArrayList<Enemy>> enemies;
-    private Timer timer;
-    private ArrayList<Timer> timers;
+    private ArrayList<ArrayList<Enemy>> enemies;    // to store enemies
+    private Timer timer;    // to move enemies
+    private ArrayList<Timer> timers;    // to make enemies shoot
     
+    /**
+     * Constructor
+     * @param width width of the window
+     * @param height height of the window
+     */
     public EnemyBlock(int width, int height){
         int enemiesX = (width - 300) / 60;
         int enemiesY = (height - 450) / 40;
@@ -34,9 +39,14 @@ public class EnemyBlock {
             }
         }
         Enemy.setDirection(0);
+        // to move enemies to the right
         timer = new Timer(3000);
     }
     
+    /**
+     * Checks if the block is empty
+     * @return true if empty
+     */
     public boolean isEmpty(){
         for(ArrayList<Enemy> column : enemies){
             if(!column.isEmpty()){
@@ -46,6 +56,10 @@ public class EnemyBlock {
         return true;
     }
     
+    /**
+     * Checks if the enemies are on the ground
+     * @return true if an enemy is on the ground
+     */
     public boolean isOnGround(){
         for(ArrayList<Enemy> column : enemies){
             if(column.size() > 0 && column.get(column.size() - 1).getY() >= 500){
@@ -55,17 +69,28 @@ public class EnemyBlock {
         return false;
     }
 
+    /**
+     * Returns timer
+     * @return 
+     */
     public Timer getTimer() {
         return timer;
     }
     
+    /**
+     * Makes the enemies shoot
+     * @return arraylist of bullets
+     */
     public ArrayList<Bullet> shoot(){
         ArrayList<Bullet> bullets = new ArrayList<>();
+        // Checks for the last enemy of each column
         for(int i = 0; i < enemies.size(); i++){
             ArrayList<Enemy> column = enemies.get(i);
+            // Checks if the column is available to shoot
             if(!column.isEmpty() && timers.get(i).isFinished()){
                 Bullet bullet = column.get(column.size() - 1).createBullet();
                 if(bullet != null){
+                    // stops this column from shooting for 5 seconds
                     timers.set(i, new Timer(5000));
                     bullets.add(bullet);
                 }
@@ -74,6 +99,11 @@ public class EnemyBlock {
         return bullets;
     }
     
+    /**
+     * Checks if the enemies crashed with a bullet
+     * @param bullet
+     * @return true if the bullet crashed
+     */
     public boolean hasCrashed(Bullet bullet){
         for(ArrayList<Enemy> column : enemies){
             for(Enemy enemy : column){
@@ -93,6 +123,7 @@ public class EnemyBlock {
             }
         }
         timer.tick();
+        // Updates direction
         if (timer.isFinished()) {
             switch (Enemy.getDirection()) {
                 case 0:
@@ -112,6 +143,7 @@ public class EnemyBlock {
                     Enemy.setDirection(0);
             }
         }
+        // ticks every shooting timer
         for(Timer timer2 : timers){
             timer2.tick();
         }
@@ -125,6 +157,10 @@ public class EnemyBlock {
         }
     }
     
+    /**
+     * Saves the enemyblock with all its enemies
+     * @param writer file writer
+     */
     public void save(PrintWriter writer){
         writer.println("" + enemies.size());
         for(ArrayList<Enemy> column : enemies){
@@ -138,6 +174,11 @@ public class EnemyBlock {
         writer.println("" + Enemy.getDirection());
     }
     
+    /**
+     * Loads enemyblock with all its enemies
+     * @param reader file to read
+     * @throws IOException 
+     */
     public void load(BufferedReader reader) throws IOException{
         enemies.clear();
         int x = Integer.parseInt(reader.readLine());
