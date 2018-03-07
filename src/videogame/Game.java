@@ -166,6 +166,9 @@ public class Game implements Runnable {
             enemyBlock.getTimer().setLastTime();
         }
         if(paused) {
+            if(keyManager.isReleased(LOAD_KEY)){
+                
+            }
             return;
         }
         player.tick();
