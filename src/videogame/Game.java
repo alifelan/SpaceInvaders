@@ -37,6 +37,8 @@ public class Game implements Runnable {
     private final int RESET_KEY;    // to access keyboard
     private Player player;          // to use a player
     private final KeyManager keyManager;  // to manage the keyboard
+    private final ArrayList<ArrayList<ShieldPiece>> shields;
+    private Timer winTimer;
     private final ArrayList<Bullet> bullets; // to store bullets
     private EnemyBlock enemyBlock;  // to store enemies
     
@@ -58,6 +60,7 @@ public class Game implements Runnable {
         LOAD_KEY = KeyEvent.VK_L;
         SAVE_KEY = KeyEvent.VK_S;
         RESET_KEY = KeyEvent.VK_R;
+        winTimer = null;
     }
 
     /**
@@ -84,6 +87,14 @@ public class Game implements Runnable {
          Assets.init();
          player = new Player(getWidth() / 2 - 35, getHeight() - 170, 70, 100, 4);
          enemyBlock = new EnemyBlock(getWidth(), getHeight());
+         shields = new ArrayList<>();
+         for(int i=0; i<3; i++) {
+             shields.add(new ArrayList<>());
+             int x = i*getWidth()/3 + getWidth()/6 - 75;
+             for(int j=0; j<10; j++) {
+                 shields.get(i).add(new ShieldPiece(x+j*15, getHeight() - 200, 15, 15));
+             }
+         }
          display.getJframe().addKeyListener(keyManager);
     }
     
@@ -113,6 +124,12 @@ public class Game implements Runnable {
             for(Bullet bullet : bullets) {
                 bullet.save(writer);
             }
+            for(int i=0; i<3; i++) {
+                writer.println(shields.get(i).size());
+                for(ShieldPiece piece : shields.get(i)) {
+                    piece.save(writer);
+                }
+            }
             writer.close();
         } catch(IOException ioe) {
             ioe.printStackTrace();
@@ -131,6 +148,13 @@ public class Game implements Runnable {
             bullets.clear();
             for(int i=0; i<b; i++) {
                 bullets.add(Bullet.load(sToInt(reader.readLine())));
+            }
+            for(int i=0; i<3; i++) {
+                shields.get(i).clear();
+                int s = Integer.parseInt(reader.readLine());
+                for(int j=0; j<s; j++) {
+                    shields.get(i).add(ShieldPiece.load(sToInt(reader.readLine())));
+                }
             }
             reader.close();
         } catch(IOException ioe) {
@@ -216,6 +240,21 @@ public class Game implements Runnable {
             shot.forEach((bullet1) -> {
                 bullets.add(bullet1);
             });
+            for(ArrayList<ShieldPiece> shield : shields) {
+                for(int i=0; i<shield.size(); i++) {
+                    for(int j=0; j<bullets.size(); j++) {
+                        if(shield.get(i).intersects(bullets.get(j))) {
+                            shield.get(i).setLives(shield.get(i).getLives() - 1);
+                            bullets.remove(j);
+                            break;
+                        }
+                    }
+                    if(shield.get(i).getLives() == 0) {
+                        shield.remove(i);
+                        i--;
+                    }
+                }
+            }
         } else{
             bullets.clear();
             if(keyManager.isReleased(RESET_KEY)){
@@ -255,6 +294,11 @@ public class Game implements Runnable {
             enemyBlock.render(g);
             for(Bullet bullet : bullets){
                 bullet.render(g);
+            }
+            for(ArrayList<ShieldPiece> shield : shields) {
+                for(ShieldPiece piece : shield) {
+                    piece.render(g);
+                }
             }
             g.setColor(Color.WHITE);
             g.setFont(new Font(g.getFont().getFontName(), Font.PLAIN, 40));
