@@ -16,12 +16,14 @@ public class Boost extends Item {
     
     private Timer timer;
     private final int SPEED;
+    private final SoundClip boosto; // to play when the player is boosted
     
     public Boost(int x, int y, int width, int height) {
         super(x,y,width,height);
         timer = new Timer(10000);
         SPEED = 4;
         this.y = -100;
+        boosto = new SoundClip("/sounds/boosto.wav");
     }
     
     @Override
@@ -39,6 +41,7 @@ public class Boost extends Item {
     
     public void crash(Player player) {
         setY(-100);
+        boosto.play();
         if(Math.random() > 0.5){
             player.setSpeed(player.getSpeed() + 2);
         } else {
