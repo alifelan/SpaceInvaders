@@ -39,7 +39,6 @@ public class Game implements Runnable {
     private final KeyManager keyManager;  // to manage the keyboard
     private final ArrayList<Bullet> bullets;
     private EnemyBlock enemyBlock;
-    private Timer winTimer;
     
     /**
      * to create title, width and height and set the game is still not running
@@ -59,7 +58,6 @@ public class Game implements Runnable {
         LOAD_KEY = KeyEvent.VK_L;
         SAVE_KEY = KeyEvent.VK_S;
         RESET_KEY = KeyEvent.VK_R;
-        winTimer = null;
     }
 
     /**
@@ -177,7 +175,7 @@ public class Game implements Runnable {
             return;
         }
         player.tick();
-        if(player.getLives() > 0) {
+        if(player.getLives() > 0 && !player.isWinner()) {
             player.checkBounds(this);
             enemyBlock.tick();
             for(int i = 0; i < bullets.size(); i++){
@@ -205,15 +203,15 @@ public class Game implements Runnable {
         } else{
             bullets.clear();
             if(keyManager.isReleased(RESET_KEY)){
-                reset();
+                if(player.getLives() <= 0){
+                    reset();
+                } else {
+                    continueGame();
+                }
             }
         }
         if(enemyBlock.isEmpty() && !player.isWinner()){
-            winTimer = new Timer(1990);
             player.setWinner(true);
-        }
-        if(player.isWinner()){
-            winTimer.tick();
         }
         if(enemyBlock.isOnGround() && player.getLives() > 0)
             player.setLives(0);
@@ -250,19 +248,27 @@ public class Game implements Runnable {
             if(paused) {
                 g.drawImage(Assets.pause, 100, 100, width- 200, height - 200, null);
             }
-            if(winTimer != null && winTimer.isFinished()){
-                g.drawString("Press SPACE to play again", 
+            if(player.isWinner()){
+                g.drawString("Press 'R' to play continue", 
+                    100, getHeight() / 2);
+            } else if(player.getLives() <= 0){
+                g.drawString("Press 'R' to play again", 
                     100, getHeight() / 2);
             }
             bs.show();
             g.dispose();
         }
-       
+    }
+    
+    public void continueGame(){
+        enemyBlock = new EnemyBlock(getWidth(), getHeight());
+        player.setWinner(false);
     }
     
     public void reset() {
         player = new Player(getWidth() / 2 - player.getWidth() / 2, getHeight() - 170, 70, 100, 4);
         enemyBlock = new EnemyBlock(getWidth(), getHeight());
+        Assets.reset();
     }
     
     /**
