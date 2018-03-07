@@ -23,12 +23,20 @@ public class Bullet extends Item{
     public Bullet(int x, int y, int width, int height, int type) {
         super(x,y,width,height);
         this.type = type;
-        sprite = Assets.menu[(int)(Math.random()*116)];
+        if(type == PLAYER_BULLET) {
+            sprite = Assets.menu[(int)(Math.random()*116)];
+        } else {
+            sprite = Assets.enemyBullet;
+        }
     }
     
     public boolean isOutOfBounds(Game game) {
         return getY() + getHeight() < 0 || 
                 getY() - getHeight() > game.getHeight();
+    }
+
+    public int getType() {
+        return type;
     }
 
     @Override
@@ -38,11 +46,7 @@ public class Bullet extends Item{
 
     @Override
     public void render(Graphics g) {
-        if(type == PLAYER_BULLET) {
-            g.drawImage(sprite, getX(), getY(), getHeight(), getWidth(), null);
-        } else {
-            g.drawRect(getX(), getY(), getHeight(), getWidth());
-        }
+        g.drawImage(sprite, getX(), getY(), getHeight(), getWidth(), null);
     }
     
 }

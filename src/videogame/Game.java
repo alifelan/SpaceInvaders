@@ -36,7 +36,6 @@ public class Game implements Runnable {
     private final ArrayList<Bullet> bullets;
     private EnemyBlock enemyBlock;
     
-    
     /**
      * to create title, width and height and set the game is still not running
      * @param title to set the title of the window
@@ -79,7 +78,7 @@ public class Game implements Runnable {
     private void init() {
          display = new Display(title, getWidth(), getHeight());  
          Assets.init();
-         player = new Player(0, getHeight() - 170, 100, 150, 4);
+         player = new Player(0, getHeight() - 170, 70, 100, 4);
          enemyBlock = new EnemyBlock(getWidth(), getHeight());
          display.getJframe().addKeyListener(keyManager);
     }
@@ -130,19 +129,25 @@ public class Game implements Runnable {
         for(int i = 0; i < bullets.size(); i++){
             Bullet bullet = bullets.get(i);
             bullet.tick();
-            if(bullet.isOutOfBounds(this) || enemyBlock.hasCrashed(bullet)) {
+            if(bullet.isOutOfBounds(this) || (bullet.getType() == Bullet.ENEMY_BULLET && 
+                    player.intersects(bullet))) {
                 bullets.remove(i);
                 i--;
-            } 
+            } else if(bullet.getType() == Bullet.PLAYER_BULLET && 
+                    enemyBlock.hasCrashed(bullet)){
+                player.setScore(player.getScore() + 100);
+                bullets.remove(i);
+                i--;
+            }
         }
         Bullet bullet = player.createBullet();
         if(bullet != null){
             bullets.add(bullet);
         }
         ArrayList<Bullet> shot = enemyBlock.shoot();
-        for(Bullet bullet1 : shot){
+        shot.forEach((bullet1) -> {
             bullets.add(bullet1);
-        }
+        });
     }
     
     private void render() {
