@@ -85,6 +85,19 @@ public class EnemyBlock {
         }
         return false;
     }
+    
+    public void crash(ArrayList<ShieldPiece> shield) {
+        for(ShieldPiece piece : shield) {
+            for(ArrayList<Enemy> column : enemies) {
+                for(Enemy enemy : column) {
+                    if(piece.intersects(enemy)) {
+                        shield.clear();
+                        return;
+                    }
+                }
+            }
+        }
+    }
 
     public void tick() {
         for (ArrayList<Enemy> column : enemies) {
