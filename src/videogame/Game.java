@@ -6,6 +6,7 @@
 package videogame;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
@@ -161,6 +162,13 @@ public class Game implements Runnable {
             for(Bullet bullet : bullets){
                 bullet.render(g);
             }
+            g.setColor(Color.WHITE);
+            g.setFont(new Font(g.getFont().getFontName(), Font.PLAIN, 40));
+            g.drawString("Score: " + String.valueOf(player.getScore()), 
+                    getWidth() - getWidth()/5, 690);
+            for(int i=0; i<player.getLives(); i++) {
+                g.drawImage(Assets.lives, i*40+20, getHeight()-40, 40, 40, null);
+            }
             if(paused) {
                 g.drawImage(Assets.pause, 0, 0, width, height, null);
             }
@@ -194,9 +202,4 @@ public class Game implements Runnable {
             }           
         }
     }
-
- 
-    
-
-
 }

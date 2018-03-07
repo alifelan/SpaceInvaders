@@ -9,19 +9,19 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
-
 /**
  *
  * @author antoniomejorado
  */
-public class Player extends Item{
+public class Player extends Item {
 
     private final int MOVE_LEFT_KEY;
     private final int MOVE_RIGHT_KEY;
     private final int SHOOT;
-    private int speed;    
+    private int speed;
     private int direction = 1;
     private int score;
+    private int lives;
     private Timer timer;
     private Timer bulletGen;
 
@@ -37,7 +37,7 @@ public class Player extends Item{
     private BufferedImage frame;
 
     private Animation current;
-    
+
     public Player(int x, int y, int width, int height, int speed) {
         super(x, y, width, height);
         MOVE_LEFT_KEY = KeyEvent.VK_LEFT;
@@ -57,8 +57,18 @@ public class Player extends Item{
         this.speed = speed;
         direction = 0;
         score = 0;
+        lives = 3;
+        timer = new Timer(0);
     }
 
+    public int getLives() {
+        return lives;
+    }
+
+    public void setLives(int lives) {
+        this.lives = lives;
+    }
+    
     public int getScore() {
         return score;
     }
@@ -66,24 +76,24 @@ public class Player extends Item{
     public void setScore(int score) {
         this.score = score;
     }
-    
+
     public void checkBounds(Game game) {
-        if(getX() < 0){
+        if (getX() < 0) {
             setX(0);
         }
-        if(getX() + getWidth() > game.getWidth()) {
+        if (getX() + getWidth() > game.getWidth()) {
             setX(game.getWidth() - getWidth());
         }
     }
-    
-    public Bullet createBullet(){
-        if(bulletGen == null) {
+
+    public Bullet createBullet() {
+        if (bulletGen == null) {
             return null;
         }
         bulletGen.tick();
-        if(bulletGen.isFinished()){
+        if (bulletGen.isFinished()) {
             bulletGen = null;
-            if(direction == 1){
+            if (direction == 1) {
                 return new Bullet(getX() + 10, getY(), 40, 40, Bullet.PLAYER_BULLET);
             } else {
                 return new Bullet(getX() + getWidth() - 50, getY(), 40, 40, Bullet.PLAYER_BULLET);
@@ -95,46 +105,43 @@ public class Player extends Item{
     @Override
     public void tick() {
         KeyManager keyManager = KeyManager.getInstance();
-        if(keyManager.isPressed(MOVE_LEFT_KEY)) {
+        if (keyManager.isPressed(MOVE_LEFT_KEY)) {
             setX(getX() - speed);
             current = moveLeft;
             direction = 1;
-        } 
-        else if(keyManager.isPressed(MOVE_RIGHT_KEY)) {
+        } else if (keyManager.isPressed(MOVE_RIGHT_KEY)) {
             setX(getX() + speed);
             current = moveRight;
             direction = 0;
         } else {
-            if(direction == 1) {
+            if (direction == 1) {
                 current = idleLeft;
             } else {
                 current = idleRight;
             }
         }
-        if(keyManager.isReleased(SHOOT) && (timer == null || timer.isFinished())) {
+        if (keyManager.isReleased(SHOOT) && timer.isFinished()) {
             timer = new Timer(300);
             bulletGen = new Timer(100);
         }
-        if(timer != null) {
-            timer.tick();
-            if(!timer.isFinished()) {
-                if(direction == 1) {
-                    current = attackLeft;
-                } else {
-                    current = attackRight;
-                }
+        timer.tick();
+        if (!timer.isFinished()) {
+            if (direction == 1) {
+                current = attackLeft;
+            } else {
+                current = attackRight;
             }
         }
         current.tick();
         frame = current.getCurrentFrame();
-        setWidth(3*frame.getWidth());
-        setHeight(3*frame.getHeight());
-        setY(690-getHeight());
+        setWidth(3 * frame.getWidth());
+        setHeight(3 * frame.getHeight());
+        setY(660 - getHeight());
     }
 
     @Override
     public void render(Graphics g) {
-        g.drawImage(frame, getX(), getY(), 
+        g.drawImage(frame, getX(), getY(),
                 getWidth(), getHeight(), null);
     }
 }

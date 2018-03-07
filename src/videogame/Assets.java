@@ -14,6 +14,7 @@ import java.awt.image.BufferedImage;
 public class Assets {
     public static BufferedImage background; // to store background image
     public static BufferedImage pause;      // to store pause image
+    public static BufferedImage lives;      // to store lives image
     public static BufferedImage playerIdleLeft[];     // to store the player image
     public static BufferedImage playerIdleRight[];     // to store the player image
     public static BufferedImage playerMoveRight[];
@@ -52,6 +53,7 @@ public class Assets {
         SpriteSheet client = new SpriteSheet(ImageLoader.loadImage("/images/client.png"));
         background = ImageLoader.loadImage("/images/Background.jpg");
         pause = ImageLoader.loadImage("/images/pause.png");
+        lives = ImageLoader.loadImage("/images/lives.png");
         playerIdleLeft[0] = chefLeft.crop(494, 7, 57, 50);
         playerIdleLeft[1] = chefLeft.crop(440, 7, 56, 50);
         playerIdleLeft[2] = chefLeft.crop(385, 7, 57, 50);
