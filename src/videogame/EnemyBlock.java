@@ -45,6 +45,15 @@ public class EnemyBlock {
         }
         return true;
     }
+    
+    public boolean isOnGround(){
+        for(ArrayList<Enemy> column : enemies){
+            if(column.size() > 0 && column.get(column.size() - 1).getY() >= 500){
+                return true;
+            }
+        }
+        return false;
+    }
 
     public Timer getTimer() {
         return timer;
