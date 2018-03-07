@@ -165,6 +165,7 @@ public class Player extends Item {
         }
         if(winTimer != null && !winTimer.isFinished()){
             winTimer.tick();
+            frame = current.getCurrentFrame();
             current.tick();
         } else if (getLives() > 0 || !timer.isFinished()) {
             current.tick();
