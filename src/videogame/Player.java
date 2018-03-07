@@ -138,6 +138,7 @@ public class Player extends Item {
         KeyManager keyManager = KeyManager.getInstance();
         if (getLives() == 0) {
             timer = null;
+            Assets.lost();
             lives--;
         }
         if (isWinner() && winTimer == null) {

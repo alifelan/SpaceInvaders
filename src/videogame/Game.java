@@ -268,6 +268,7 @@ public class Game implements Runnable {
     public void reset() {
         player = new Player(getWidth() / 2 - player.getWidth() / 2, getHeight() - 170, 70, 100, 4);
         enemyBlock = new EnemyBlock(getWidth(), getHeight());
+        Assets.reset();
     }
     
     /**
