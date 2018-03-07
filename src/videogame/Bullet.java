@@ -16,10 +16,11 @@ import java.io.PrintWriter;
 public class Bullet extends Item{
     
     private final int type;
+    private int imageNumber;
     private final static int SPEED = 2;
     public static final int PLAYER_BULLET = -1;
     public static final int ENEMY_BULLET = 1;
-    private final BufferedImage sprite;
+    private BufferedImage sprite;
     
     /**
      * Constructor
@@ -32,8 +33,9 @@ public class Bullet extends Item{
     public Bullet(int x, int y, int width, int height, int type) {
         super(x,y,width,height);
         this.type = type;
+        imageNumber = (int)(Math.random()*116);
         if(type == PLAYER_BULLET) {
-            sprite = Assets.menu[(int)(Math.random()*116)];
+            sprite = Assets.menu[imageNumber];
         } else {
             sprite = Assets.enemyBullet;
         }
@@ -56,7 +58,7 @@ public class Bullet extends Item{
     @Override
     public void save(PrintWriter writer) {
         super.save(writer);
-        writer.println(","+type);
+        writer.println(","+type+","+imageNumber);
     }
     
     /**
@@ -65,7 +67,11 @@ public class Bullet extends Item{
      * @return a bullet with the new values
      */
     public static Bullet load(int[] tokens) {
-        return new Bullet(tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]);
+        Bullet bullet = new Bullet(tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]);
+        if(bullet.type == Bullet.PLAYER_BULLET) {
+            bullet.sprite = Assets.menu[tokens[5]];
+        }
+        return bullet;
     }
 
     /**
