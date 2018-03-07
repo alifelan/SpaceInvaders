@@ -15,7 +15,7 @@ import java.awt.image.BufferedImage;
 public class Bullet extends Item{
     
     private final int type;
-    private static int SPEED = 2;
+    private final static int SPEED = 2;
     public static final int PLAYER_BULLET = -1;
     public static final int ENEMY_BULLET = 1;
     private final BufferedImage sprite;
@@ -27,7 +27,8 @@ public class Bullet extends Item{
     }
     
     public boolean isOutOfBounds(Game game) {
-        return getY() + getHeight() < 0;
+        return getY() + getHeight() < 0 || 
+                getY() - getHeight() > game.getHeight();
     }
 
     @Override
@@ -37,7 +38,11 @@ public class Bullet extends Item{
 
     @Override
     public void render(Graphics g) {
-        g.drawImage(sprite, getX(), getY(), getHeight(), getWidth(), null);
+        if(type == PLAYER_BULLET) {
+            g.drawImage(sprite, getX(), getY(), getHeight(), getWidth(), null);
+        } else {
+            g.drawRect(getX(), getY(), getHeight(), getWidth());
+        }
     }
     
 }
