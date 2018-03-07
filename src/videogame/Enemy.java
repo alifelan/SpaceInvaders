@@ -6,6 +6,7 @@
 package videogame;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 
 /**
  *
@@ -52,10 +53,10 @@ public class Enemy extends Item {
 
     public Bullet createBullet() {
         int prob = (int)(Math.random()*100);
-        if(prob < 80) {
+        if(prob < 99) {
             return null;
         }
-        return new Bullet(getWidth()/2-10, getY() + getHeight(), 
+        return new Bullet(getX() + getWidth()/2-10, getY() + getHeight(), 
                 20, 20, Bullet.ENEMY_BULLET);
     }
     
@@ -69,6 +70,15 @@ public class Enemy extends Item {
             setY(getY() + 1);
         }
         current.tick();
+    }
+    
+     /**
+     * Returns its rectangle
+     * @return 
+     */
+    @Override
+    public Rectangle getBounds() {
+        return new Rectangle(getX() + 10, getY(), getWidth() - 15, getHeight());
     }
 
     @Override
