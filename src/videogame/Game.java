@@ -38,7 +38,6 @@ public class Game implements Runnable {
     private Player player;          // to use a player
     private final KeyManager keyManager;  // to manage the keyboard
     private final ArrayList<ArrayList<ShieldPiece>> shields;
-    private Timer winTimer;
     private final ArrayList<Bullet> bullets; // to store bullets
     private EnemyBlock enemyBlock;  // to store enemies
     /**
@@ -60,7 +59,7 @@ public class Game implements Runnable {
         LOAD_KEY = KeyEvent.VK_L;
         SAVE_KEY = KeyEvent.VK_S;
         RESET_KEY = KeyEvent.VK_R;
-        winTimer = null;
+        shields = new ArrayList<>();
     }
 
     /**
@@ -277,7 +276,6 @@ public class Game implements Runnable {
         if(enemyBlock.isOnGround() && player.getLives() > 0)
             player.setLives(0);
         }
-    }
 
     private void render() {
         // get the buffer strategy from the display
@@ -315,10 +313,10 @@ public class Game implements Runnable {
             }
             if(player.isWinner()){
                 g.drawString("Press 'R' to play continue", 
-                    100, getHeight() / 2);
+                    getWidth()/3, getHeight() / 2);
             } else if(player.getLives() <= 0){
                 g.drawString("Press 'R' to play again", 
-                    100, getHeight() / 2);
+                    getWidth()/3, getHeight() / 2);
             }
             bs.show();
             g.dispose();
