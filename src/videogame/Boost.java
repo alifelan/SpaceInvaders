@@ -22,7 +22,7 @@ public class Boost extends Item {
         super(x,y,width,height);
         timer = new Timer(10000);
         SPEED = 4;
-        this.y = -100;
+        this.y = 1000;
         boosto = new SoundClip("/sounds/boosto.wav");
     }
     
@@ -40,7 +40,7 @@ public class Boost extends Item {
     }
     
     public void crash(Player player) {
-        setY(-100);
+        setY(1000);
         boosto.play();
         if(Math.random() > 0.5){
             player.setSpeed(player.getSpeed() + 2);
