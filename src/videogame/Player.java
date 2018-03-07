@@ -134,10 +134,21 @@ public class Player extends Item {
         }
         current.tick();
         frame = current.getCurrentFrame();
-        setWidth(3 * frame.getWidth());
-        setHeight(3 * frame.getHeight());
+        setWidth(2 * frame.getWidth());
+        setHeight(2 * frame.getHeight());
         setY(660 - getHeight());
     }
+
+    @Override
+    public boolean intersects(Item item) {
+        if(super.intersects(item)){
+            lives--;
+            return true;
+        }
+        return false;
+    }
+    
+    
 
     @Override
     public void render(Graphics g) {

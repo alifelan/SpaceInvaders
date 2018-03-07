@@ -29,6 +29,7 @@ public class Assets {
     public static BufferedImage clientWalkRight[];
     public static BufferedImage clientWalkDown[];
     public static BufferedImage clientWalkUp[];
+    public static BufferedImage enemyBullet;
 
     /**
      * initializing the images of the game
@@ -123,6 +124,7 @@ public class Assets {
         for(int i = 0; i < 4; i++){
             clientWalkUp[i] = client.crop(i * 32, 160, 32, 40);
         }
+        enemyBullet = ImageLoader.loadImage("/images/enemyBullet.png");
     }
     
 }

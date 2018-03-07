@@ -25,7 +25,7 @@ public class EnemyBlock {
         timers = new ArrayList<>();
         for(int x = 0; x < enemiesX; x++){
             enemies.add(new ArrayList<>());
-            timers.add(new Timer(5000));
+            timers.add(new Timer(0));
             for(int y = 0; y < enemiesY; y++){
                 enemies.get(x).add(new Enemy(150 + x * 60, y * 40, 50, 35, 1));
             }
