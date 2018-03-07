@@ -24,6 +24,15 @@ public class Enemy extends Item {
         this.type = type;
     }
 
+    public Bullet createBullet() {
+        int prob = (int)(Math.random()*100);
+        if(prob < 80) {
+            return null;
+        }
+        return new Bullet(getWidth()/2-10, getY() + getHeight(), 
+                20, 20, Bullet.ENEMY_BULLET);
+    }
+    
     @Override
     public void tick() {
         throw new UnsupportedOperationException("Not supported yet.");
