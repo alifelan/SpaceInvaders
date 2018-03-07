@@ -10,7 +10,11 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.io.PrintWriter;
+import java.io.BufferedReader;
+import java.io.FileReader;
 
 
 /**
@@ -83,6 +87,44 @@ public class Game implements Runnable {
          player = new Player(getWidth() / 2 - 35, getHeight() - 170, 70, 100, 4);
          enemyBlock = new EnemyBlock(getWidth(), getHeight());
          display.getJframe().addKeyListener(keyManager);
+    }
+    
+    private int[] sToInt(String s) {
+        String tokensS[] = s.split(",");
+        int tokens[] = new int[tokensS.length];
+        for(int i=0; i<tokens.length; i++) {
+            tokens[i] = Integer.parseInt(tokensS[i]);
+        }
+        return tokens;
+    }
+    
+    private void save() {
+        try {
+            PrintWriter writer = new PrintWriter("data.txt");
+            player.save(writer);
+            enemyBlock.save(writer);
+            writer.println(""+bullets.size());
+            for(Bullet bullet : bullets) {
+                bullet.save(writer);
+            }
+        } catch(IOException ioe) {
+            ioe.printStackTrace();
+        }
+    }
+    
+    private void load() {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("data.txt"));
+            player = Player.load(sToInt(reader.readLine()));
+            enemyBlock.load(reader);
+            int b = Integer.parseInt(reader.readLine());
+            bullets.clear();
+            for(int i=0; i<b; i++) {
+                bullets.add(Bullet.load(sToInt(reader.readLine())));
+            }
+        } catch(IOException ioe) {
+            ioe.printStackTrace();
+        }
     }
     
     @Override
@@ -165,7 +207,6 @@ public class Game implements Runnable {
         if(player.isWinner()){
             winTimer.tick();
         }
-        
     }
     
     private void render() {
