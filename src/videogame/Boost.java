@@ -21,17 +21,20 @@ public class Boost extends Item {
         super(x,y,width,height);
         timer = new Timer(10000);
         SPEED = 4;
-        setY(-100);
+        this.y = -100;
     }
     
     @Override
     public void save(PrintWriter writer) {
         super.save(writer);
-        writer.println();
+        writer.println(","+(timer.getTime() - timer.getTimer()));
     }
     
     public static Boost load(int tokens[]) {
-        return new Boost(tokens[0], tokens[1], tokens[2], tokens[3]);
+        Boost boost = new Boost(tokens[0], tokens[1], tokens[2], tokens[3]);
+        boost.timer = new Timer(tokens[4]);
+        boost.y = tokens[1];
+        return boost;
     }
     
     public void crash(Player player) {
