@@ -27,6 +27,7 @@ public class Game implements Runnable {
     private Player player;          // to use a player
     private final KeyManager keyManager;  // to manage the keyboard
     private final ArrayList<Bullet> bullets;
+    private EnemyBlock enemyBlock;
     
     
     /**
@@ -67,6 +68,7 @@ public class Game implements Runnable {
          display = new Display(title, getWidth(), getHeight());  
          Assets.init();
          player = new Player(0, getHeight() - 170, 100, 150, 4);
+         enemyBlock = new EnemyBlock(getWidth(), getHeight());
          display.getJframe().addKeyListener(keyManager);
     }
     
@@ -110,6 +112,7 @@ public class Game implements Runnable {
         // avancing player with colision
         player.tick();
         player.checkBounds(this);
+        enemyBlock.tick();
         for(int i = 0; i < bullets.size(); i++){
             Bullet bullet = bullets.get(i);
             bullet.tick();
@@ -141,6 +144,7 @@ public class Game implements Runnable {
             g = bs.getDrawGraphics();
             g.drawImage(Assets.background, 0, 0, width, height, null);
             player.render(g);
+            enemyBlock.render(g);
             for(Bullet bullet : bullets){
                 bullet.render(g);
             }
