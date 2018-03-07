@@ -7,6 +7,7 @@ package videogame;
 
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 
 
 /**
@@ -32,6 +33,7 @@ public class Player extends Item{
     private final Animation loseRight;
     private final Animation loseLeft;
     private final Animation win;
+    private BufferedImage frame;
 
     private Animation current;
     
@@ -114,11 +116,15 @@ public class Player extends Item{
             }
         }
         current.tick();
+        frame = current.getCurrentFrame();
+        setWidth(3*frame.getWidth());
+        setHeight(3*frame.getHeight());
+        setY(650-getHeight());
     }
 
     @Override
     public void render(Graphics g) {
-        g.drawImage(current.getCurrentFrame(), getX(), getY(), 
+        g.drawImage(frame, getX(), getY(), 
                 getWidth(), getHeight(), null);
     }
 }
