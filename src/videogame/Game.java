@@ -40,6 +40,9 @@ public class Game implements Runnable {
     private final ArrayList<ArrayList<ShieldPiece>> shields;
     private final ArrayList<Bullet> bullets; // to store bullets
     private EnemyBlock enemyBlock;  // to store enemies
+    private final SoundClip shieldHit;  // to play sound when the shield is hit
+    private final SoundClip shoot;  // to play when someone shoots
+    
     /**
      * to create title, width and height and set the game is still not running
      *
@@ -60,6 +63,8 @@ public class Game implements Runnable {
         SAVE_KEY = KeyEvent.VK_S;
         RESET_KEY = KeyEvent.VK_R;
         shields = new ArrayList<>();
+        shieldHit = new SoundClip("/sounds/drop.wav");
+        shoot = new SoundClip("/sounds/throw.wav");
     }
 
     /**
@@ -232,18 +237,23 @@ public class Game implements Runnable {
             // Checks if the player created a bullet, and if it did adds it to the array
             Bullet bullet = player.createBullet();
             if (bullet != null) {
+                shoot.play();
                 bullets.add(bullet);
             }
             // checks if the enemies created bullets, and if they did adds them to the array
             ArrayList<Bullet> shot = enemyBlock.shoot();
             shot.forEach((bullet1) -> {
                 bullets.add(bullet1);
+                if(bullet == null){
+                    shoot.play();
+                }
             });
             for (ArrayList<ShieldPiece> shield : shields) {
                 for (int i = 0; i < shield.size(); i++) {
                     for (int j = 0; j < bullets.size(); j++) {
                         if (shield.get(i).intersects(bullets.get(j))) {
                             shield.get(i).setLives(shield.get(i).getLives() - 1);
+                            shieldHit.play();
                             bullets.remove(j);
                             break;
                         }

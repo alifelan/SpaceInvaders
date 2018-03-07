@@ -27,6 +27,8 @@ public class Player extends Item {
     private Timer bulletGen;    // to create a bullet
     private Timer winTimer; // to keep track of the winning animation
     public boolean winner;  // to know if the player has winned
+    private final SoundClip lose;   // to play the sound when the player loses
+    private final SoundClip winSound;    // to play when the player wins
 
     // to animate the player
     private final Animation idleRight;
@@ -73,7 +75,8 @@ public class Player extends Item {
         lives = 5;
         timer = new Timer(0);
         winTimer = null;
-        
+        lose = new SoundClip("/sounds/ramsayInsult.wav");
+        winSound = new SoundClip("/sounds/win.wav");
     }
 
     /**
@@ -197,11 +200,13 @@ public class Player extends Item {
             Assets.lost();
             // Takes one out to avoid entering again
             lives--;
+            lose.play();
         }
         // Checks if the player won and if we havent updated the animation
         if (isWinner() && winTimer == null) {
             current = win;
             winTimer = new Timer(2200);
+            winSound.play();
         } 
         // Checks if the player lost
         else if (getLives() <= 0 && !isWinner()) {
