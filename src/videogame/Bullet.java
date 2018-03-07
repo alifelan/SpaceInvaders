@@ -14,11 +14,11 @@ import java.awt.image.BufferedImage;
  */
 public class Bullet extends Item{
     
-    private int type;
+    private final int type;
     private static int SPEED = 2;
-    public static int PLAYER_BULLET = -1;
-    public static int ENEMY_BULLET = 1;
-    private BufferedImage sprite;
+    public static final int PLAYER_BULLET = -1;
+    public static final int ENEMY_BULLET = 1;
+    private final BufferedImage sprite;
     
     public Bullet(int x, int y, int width, int height, int type) {
         super(x,y,width,height);
