@@ -133,6 +133,26 @@ public class Player extends Item {
     }
 
     /**
+     * Returns speed
+     * @return speed
+     */
+    public int getSpeed() {
+        return speed;
+    }
+
+    /**
+     * Sets speed
+     * @param speed 
+     */
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
+    public int getSHOOT() {
+        return SHOOT;
+    }
+    
+    /**
      * Keeps the player in the window
      * @param game 
      */
