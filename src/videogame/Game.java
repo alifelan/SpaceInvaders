@@ -157,6 +157,9 @@ public class Game implements Runnable {
             for(Bullet bullet : bullets){
                 bullet.render(g);
             }
+            if(paused) {
+                g.drawImage(Assets.pause, 0, 0, width, height, null);
+            }
             bs.show();
             g.dispose();
         }
