@@ -71,6 +71,10 @@ public class Player extends Item {
     }
 
     public void setWinner(boolean winner) {
+        if(!winner){
+            winTimer = null;
+            win.tick();
+        }
         this.winner = winner;
     }
 
@@ -138,7 +142,7 @@ public class Player extends Item {
         }
         if (isWinner() && winTimer == null) {
             current = win;
-            winTimer = new Timer(1990);
+            winTimer = new Timer(2200);
         } else if (getLives() <= 0 && !isWinner()) {
             if (timer == null) {
                 timer = new Timer(500);
@@ -182,7 +186,7 @@ public class Player extends Item {
             winTimer.tick();
             frame = current.getCurrentFrame();
             current.tick();
-        } else if (getLives() > 0 || !timer.isFinished() && !isWinner()) {
+        } else if ((getLives() > 0 || !timer.isFinished()) && !isWinner()) {
             current.tick();
             frame = current.getCurrentFrame();
             setWidth(2 * frame.getWidth());
