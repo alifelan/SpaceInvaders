@@ -20,6 +20,7 @@ public class EnemyBlock {
     private ArrayList<ArrayList<Enemy>> enemies;    // to store enemies
     private Timer timer;    // to move enemies
     private ArrayList<Timer> timers;    // to make enemies shoot
+    private final SoundClip eat;
     
     /**
      * Constructor
@@ -41,6 +42,7 @@ public class EnemyBlock {
         Enemy.setDirection(0);
         // to move enemies to the right
         timer = new Timer(3000);
+        eat = new SoundClip("/sounds/munch.wav");
     }
     
     /**
@@ -109,6 +111,7 @@ public class EnemyBlock {
             for(Enemy enemy : column){
                 if(enemy.intersects(bullet)){
                     column.remove(enemy);
+                    eat.play();
                     return true;
                 }
             }
