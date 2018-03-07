@@ -8,6 +8,7 @@ package videogame;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.io.PrintWriter;
 
 /**
  *
@@ -114,6 +115,20 @@ public class Player extends Item {
         return null;
     }
 
+    @Override
+    public void save(PrintWriter writer) {
+        super.save(writer);
+        writer.println(","+speed+","+direction+","+","+score+","+lives);
+    }
+    
+    public static Player load(int[] tokens) {
+        Player player = new Player(tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]);
+        player.direction = tokens[5];
+        player.score = tokens[6];
+        player.lives = tokens[7];
+        return player;
+    }
+    
     @Override
     public void tick() {
         KeyManager keyManager = KeyManager.getInstance();
