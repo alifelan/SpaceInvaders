@@ -215,6 +215,8 @@ public class Game implements Runnable {
         if(player.isWinner()){
             winTimer.tick();
         }
+        if(enemyBlock.isOnGround() && player.getLives() > 0)
+            player.setLives(0);
     }
     
     private void render() {

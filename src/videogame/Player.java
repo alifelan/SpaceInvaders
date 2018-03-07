@@ -60,7 +60,7 @@ public class Player extends Item {
         this.speed = speed;
         direction = 0;
         score = 0;
-        lives = 3;
+        lives = 5;
         timer = new Timer(0);
         winTimer = null;
         
