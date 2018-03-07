@@ -23,6 +23,10 @@ public class Assets {
     public static BufferedImage playerLoseLeft[];
     public static BufferedImage playerWin[];
     public static BufferedImage menu[];
+    public static BufferedImage clientWalkLeft[];
+    public static BufferedImage clientWalkRight[];
+    public static BufferedImage clientWalkDown[];
+    public static BufferedImage clientWalkUp[];
 
     /**
      * initializing the images of the game
@@ -37,9 +41,14 @@ public class Assets {
         playerLoseRight = new BufferedImage[3];
         playerLoseLeft = new BufferedImage[3];
         playerWin = new BufferedImage[20];
+        clientWalkLeft = new BufferedImage[4];
+        clientWalkRight = new BufferedImage[4];
+        clientWalkDown = new BufferedImage[4];
+        clientWalkUp = new BufferedImage[4];
         SpriteSheet chefRight = new SpriteSheet(ImageLoader.loadImage("/images/chefRight.png"));
         SpriteSheet chefLeft = new SpriteSheet(ImageLoader.loadImage("/images/chefLeft.png"));
         SpriteSheet menuSheet = new SpriteSheet(ImageLoader.loadImage("/images/menu.png"));
+        SpriteSheet client = new SpriteSheet(ImageLoader.loadImage("/images/client.png"));
         background = ImageLoader.loadImage("/images/Background.jpg");
         playerIdleLeft[0] = chefLeft.crop(494, 7, 57, 50);
         playerIdleLeft[1] = chefLeft.crop(440, 7, 56, 50);
@@ -97,6 +106,18 @@ public class Assets {
         }
         for(int i=0; i<4; i++) {
             menu[112+i] = menuSheet.crop(34*14, 34*(4+i), 34, 34);
+        }
+        for(int i = 0; i < 4; i++){
+            clientWalkDown[i] = client.crop(i * 32, 10, 32, 40);
+        }
+        for(int i = 0; i < 4; i++){
+            clientWalkLeft[i] = client.crop(i * 32, 60, 32, 40);
+        }
+        for(int i = 0; i < 4; i++){
+            clientWalkRight[i] = client.crop(i * 32, 110, 32, 40);
+        }
+        for(int i = 0; i < 4; i++){
+            clientWalkUp[i] = client.crop(i * 32, 160, 32, 40);
         }
     }
     
