@@ -24,6 +24,7 @@ public class Player extends Item {
     private int lives;
     private Timer timer;
     private Timer bulletGen;
+    public boolean winner;
 
     private final Animation idleRight;
     private final Animation idleLeft;
@@ -50,8 +51,8 @@ public class Player extends Item {
         moveLeft = new Animation(Assets.playerMoveLeft, 100);
         attackRight = new Animation(Assets.playerAttackRight, 100);
         attackLeft = new Animation(Assets.playerAttackLeft, 100);
-        loseRight = new Animation(Assets.playerLoseRight, 100);
-        loseLeft = new Animation(Assets.playerLoseLeft, 100);
+        loseRight = new Animation(Assets.playerLoseRight, 300);
+        loseLeft = new Animation(Assets.playerLoseLeft, 300);
         win = new Animation(Assets.playerWin, 100);
 
         this.speed = speed;
@@ -61,6 +62,14 @@ public class Player extends Item {
         timer = new Timer(0);
     }
 
+    public boolean isWinner() {
+        return winner;
+    }
+
+    public void setWinner(boolean winner) {
+        this.winner = winner;
+    }
+
     public int getLives() {
         return lives;
     }
@@ -68,7 +77,7 @@ public class Player extends Item {
     public void setLives(int lives) {
         this.lives = lives;
     }
-    
+
     public int getScore() {
         return score;
     }
@@ -105,50 +114,68 @@ public class Player extends Item {
     @Override
     public void tick() {
         KeyManager keyManager = KeyManager.getInstance();
-        if (keyManager.isPressed(MOVE_LEFT_KEY)) {
-            setX(getX() - speed);
-            current = moveLeft;
-            direction = 1;
-        } else if (keyManager.isPressed(MOVE_RIGHT_KEY)) {
-            setX(getX() + speed);
-            current = moveRight;
-            direction = 0;
+        if (getLives() == 0) {
+            timer = null;
+            lives--;
+        }
+        if (isWinner()) {
+            current = win;
+        } else if (getLives() <= 0) {
+            if (timer == null) {
+                timer = new Timer(500);
+            }
+            timer.tick();
+            if (direction == 1) {
+                current = loseLeft;
+            } else {
+                current = loseRight;
+            }
         } else {
-            if (direction == 1) {
-                current = idleLeft;
+            if (keyManager.isPressed(MOVE_LEFT_KEY)) {
+                setX(getX() - speed);
+                current = moveLeft;
+                direction = 1;
+            } else if (keyManager.isPressed(MOVE_RIGHT_KEY)) {
+                setX(getX() + speed);
+                current = moveRight;
+                direction = 0;
             } else {
-                current = idleRight;
+                if (direction == 1) {
+                    current = idleLeft;
+                } else {
+                    current = idleRight;
+                }
+            }
+            if (keyManager.isReleased(SHOOT) && timer.isFinished()) {
+                timer = new Timer(300);
+                bulletGen = new Timer(100);
+            }
+            timer.tick();
+            if (!timer.isFinished()) {
+                if (direction == 1) {
+                    current = attackLeft;
+                } else {
+                    current = attackRight;
+                }
             }
         }
-        if (keyManager.isReleased(SHOOT) && timer.isFinished()) {
-            timer = new Timer(300);
-            bulletGen = new Timer(100);
+        if (getLives() > 0 || !timer.isFinished()) {
+            current.tick();
+            frame = current.getCurrentFrame();
+            setWidth(2 * frame.getWidth());
+            setHeight(2 * frame.getHeight());
+            setY(660 - getHeight());
         }
-        timer.tick();
-        if (!timer.isFinished()) {
-            if (direction == 1) {
-                current = attackLeft;
-            } else {
-                current = attackRight;
-            }
-        }
-        current.tick();
-        frame = current.getCurrentFrame();
-        setWidth(2 * frame.getWidth());
-        setHeight(2 * frame.getHeight());
-        setY(660 - getHeight());
     }
 
     @Override
     public boolean intersects(Item item) {
-        if(super.intersects(item)){
+        if (super.intersects(item)) {
             lives--;
             return true;
         }
         return false;
     }
-    
-    
 
     @Override
     public void render(Graphics g) {
