@@ -16,18 +16,19 @@ import java.io.PrintWriter;
  */
 public class Player extends Item {
 
-    private final int MOVE_LEFT_KEY;
-    private final int MOVE_RIGHT_KEY;
-    private final int SHOOT;
-    private int speed;
-    private int direction = 1;
-    private int score;
-    private int lives;
-    private Timer timer;
-    private Timer bulletGen;
-    private Timer winTimer;
-    public boolean winner;
+    private final int MOVE_LEFT_KEY;    // to access keyboard
+    private final int MOVE_RIGHT_KEY;   // to access keyboard
+    private final int SHOOT;    // to access keyboard
+    private int speed;  // players speed
+    private int direction = 1;  // where the player is heading
+    private int score;  // points gained
+    private int lives;  // lives remaining
+    private Timer timer;    // to keep track of the losing or shooting animation
+    private Timer bulletGen;    // to create a bullet
+    private Timer winTimer; // to keep track of the winning animation
+    public boolean winner;  // to know if the player has winned
 
+    // to animate the player
     private final Animation idleRight;
     private final Animation idleLeft;
     private final Animation moveRight;
@@ -39,8 +40,17 @@ public class Player extends Item {
     private final Animation win;
     private BufferedImage frame;
 
+    // to keep track of current animation
     private Animation current;
-
+    
+    /**
+     * Constructor
+     * @param x position in x
+     * @param y position in y
+     * @param width width of the player
+     * @param height height of the player
+     * @param speed movement
+     */
     public Player(int x, int y, int width, int height, int speed) {
         super(x, y, width, height);
         MOVE_LEFT_KEY = KeyEvent.VK_LEFT;
@@ -66,11 +76,20 @@ public class Player extends Item {
         
     }
 
+    /**
+     * Returns if the player won
+     * @return winner, true if the player won
+     */
     public boolean isWinner() {
         return winner;
     }
 
+    /**
+     * Sets winner state
+     * @param winner state
+     */
     public void setWinner(boolean winner) {
+        // sets timer to null, and restarts win animation
         if(!winner){
             winTimer = null;
             win.tick();
@@ -78,22 +97,42 @@ public class Player extends Item {
         this.winner = winner;
     }
 
+    /**
+     * Returns lives
+     * @return lives remaining
+     */
     public int getLives() {
         return lives;
     }
 
+    /**
+     * Sets lives
+     * @param lives lives to play
+     */
     public void setLives(int lives) {
         this.lives = lives;
     }
 
+    /**
+     * Returns score of the player
+     * @return score
+     */
     public int getScore() {
         return score;
     }
 
+    /**
+     * Sets score, used to restart the game
+     * @param score 
+     */
     public void setScore(int score) {
         this.score = score;
     }
 
+    /**
+     * Keeps the player in the window
+     * @param game 
+     */
     public void checkBounds(Game game) {
         if (getX() < 0) {
             setX(0);
@@ -103,12 +142,19 @@ public class Player extends Item {
         }
     }
 
+    /**
+     * Creates a bullet
+     * @return a bullet if the player pressed the key, otherwise null
+     */
     public Bullet createBullet() {
+        // checks if the timer exists
         if (bulletGen == null) {
             return null;
         }
         bulletGen.tick();
+        // if the timer has finished, player creates a bullet
         if (bulletGen.isFinished()) {
+            // sets timer to null to create more bullets when needed
             bulletGen = null;
             if (direction == 1) {
                 return new Bullet(getX() + 10, getY(), 40, 40, Bullet.PLAYER_BULLET);
@@ -119,12 +165,21 @@ public class Player extends Item {
         return null;
     }
 
+    /**
+     * Saves the player
+     * @param writer file to write
+     */
     @Override
     public void save(PrintWriter writer) {
         super.save(writer);
         writer.println(","+speed+","+direction+","+score+","+lives);
     }
     
+    /**
+     * Loads the player
+     * @param tokens values from the file
+     * @return a new player with the new values
+     */
     public static Player load(int[] tokens) {
         Player player = new Player(tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]);
         player.direction = tokens[5];
@@ -136,25 +191,35 @@ public class Player extends Item {
     @Override
     public void tick() {
         KeyManager keyManager = KeyManager.getInstance();
+        // Checks if the player is out of lives
         if (getLives() == 0) {
             timer = null;
             Assets.lost();
+            // Takes one out to avoid entering again
             lives--;
         }
+        // Checks if the player won and if we havent updated the animation
         if (isWinner() && winTimer == null) {
             current = win;
             winTimer = new Timer(2200);
-        } else if (getLives() <= 0 && !isWinner()) {
+        } 
+        // Checks if the player lost
+        else if (getLives() <= 0 && !isWinner()) {
+            // Creates a timer if it doesnt exists
             if (timer == null) {
                 timer = new Timer(500);
+                // Updates the animation
+                if (direction == 1) {
+                    current = loseLeft;
+                } else {
+                    current = loseRight;
+                }
             }
             timer.tick();
-            if (direction == 1) {
-                current = loseLeft;
-            } else {
-                current = loseRight;
-            }
-        } else if(!isWinner()){
+        } 
+        // Enters if the game is going
+        else if(!isWinner()){
+            // Checks if the player moved left or right, or if it didnt move and selects the animation
             if (keyManager.isPressed(MOVE_LEFT_KEY)) {
                 setX(getX() - speed);
                 current = moveLeft;
@@ -170,11 +235,13 @@ public class Player extends Item {
                     current = idleRight;
                 }
             }
+            // Checks if the player pressed the shoot key and if the player is available to shoot
             if (keyManager.isReleased(SHOOT) && timer.isFinished()) {
                 timer = new Timer(300);
                 bulletGen = new Timer(100);
             }
             timer.tick();
+            // uses the attack animation while the timer hasnt finished
             if (!timer.isFinished()) {
                 if (direction == 1) {
                     current = attackLeft;
@@ -183,6 +250,7 @@ public class Player extends Item {
                 }
             }
         }
+        // Enters if the player won, and the animation hasnt ended
         if(winTimer != null && !winTimer.isFinished()){
             winTimer.tick();
             frame = current.getCurrentFrame();
@@ -199,6 +267,7 @@ public class Player extends Item {
     @Override
     public boolean intersects(Item item) {
         if (super.intersects(item)) {
+            // takes one live out if the player collided
             lives--;
             return true;
         }

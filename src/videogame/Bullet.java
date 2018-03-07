@@ -21,6 +21,14 @@ public class Bullet extends Item{
     public static final int ENEMY_BULLET = 1;
     private final BufferedImage sprite;
     
+    /**
+     * Constructor
+     * @param x position in x
+     * @param y position in y
+     * @param width width of the bullet
+     * @param height height of the bullet
+     * @param type owner
+     */
     public Bullet(int x, int y, int width, int height, int type) {
         super(x,y,width,height);
         this.type = type;
@@ -31,21 +39,39 @@ public class Bullet extends Item{
         }
     }
     
+    /**
+     * checks if the bullet is out of the window
+     * @param game to check the window
+     * @return true if its out
+     */
     public boolean isOutOfBounds(Game game) {
         return getY() + getHeight() < 0 || 
                 getY() - getHeight() > game.getHeight();
     }
     
+    /**
+     * Saves the bullet
+     * @param writer file to write
+     */
     @Override
     public void save(PrintWriter writer) {
         super.save(writer);
         writer.println(","+type);
     }
     
+    /**
+     * Loads bullet
+     * @param tokens values
+     * @return a bullet with the new values
+     */
     public static Bullet load(int[] tokens) {
         return new Bullet(tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]);
     }
 
+    /**
+     * Returns type
+     * @return owner
+     */
     public int getType() {
         return type;
     }

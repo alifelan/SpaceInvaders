@@ -27,6 +27,10 @@ public class KeyManager implements KeyListener {
         instance = this;
     }
     
+    /**
+     * Returns keyManager
+     * @return this
+     */
     public static KeyManager getInstance() {
         if(instance == null)
             instance = new KeyManager();
@@ -63,10 +67,20 @@ public class KeyManager implements KeyListener {
         }
     }
     
+    /**
+     * Checks if the key was pressed
+     * @param key keys index
+     * @return true if its pressed
+     */
     public boolean isPressed(int key) {
         return pressedKeys[key];
     }
     
+    /**
+     * checks if the key was released
+     * @param key keys index
+     * @return true if its released
+     */
     public boolean isReleased(int key) {
         return releasedKeysQuery[key];
     }
