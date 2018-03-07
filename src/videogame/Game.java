@@ -107,6 +107,7 @@ public class Game implements Runnable {
             for(Bullet bullet : bullets) {
                 bullet.save(writer);
             }
+            writer.close();
         } catch(IOException ioe) {
             ioe.printStackTrace();
         }
@@ -122,6 +123,7 @@ public class Game implements Runnable {
             for(int i=0; i<b; i++) {
                 bullets.add(Bullet.load(sToInt(reader.readLine())));
             }
+            reader.close();
         } catch(IOException ioe) {
             ioe.printStackTrace();
         }
