@@ -21,6 +21,7 @@ public class Player extends Item{
     private final int SHOOT;
     private int speed;    
     private int direction = 1;
+    private int score;
     private Timer timer;
     private Timer bulletGen;
 
@@ -55,6 +56,15 @@ public class Player extends Item{
 
         this.speed = speed;
         direction = 0;
+        score = 0;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
     
     public void checkBounds(Game game) {
@@ -119,7 +129,7 @@ public class Player extends Item{
         frame = current.getCurrentFrame();
         setWidth(3*frame.getWidth());
         setHeight(3*frame.getHeight());
-        setY(650-getHeight());
+        setY(690-getHeight());
     }
 
     @Override
