@@ -7,6 +7,7 @@ package videogame;
 
 import java.awt.Graphics;
 import java.awt.Color;
+import java.io.PrintWriter;
 
 /**
  *
@@ -28,6 +29,18 @@ public class ShieldPiece extends Item {
     public void setLives(int lives) {
         this.lives = lives;
     }
+    
+    @Override
+    public void save(PrintWriter writer) {
+        super.save(writer);
+        writer.println(","+lives);
+    }
+    
+    public static ShieldPiece load(int tokens[]) {
+        ShieldPiece piece = new ShieldPiece(tokens[0], tokens[1], tokens[2], tokens[3]);;
+        piece.setLives(tokens[4]);
+        return piece;
+    }
 
     @Override
     public void tick() {
@@ -44,7 +57,6 @@ public class ShieldPiece extends Item {
         }
         g.setColor(new Color(Integer.parseInt(hex, 16)));
         g.fillRect(x,y,width,height);
-        System.out.println(y);
     }
     
 }
