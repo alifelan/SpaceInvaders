@@ -119,7 +119,7 @@ public class Player extends Item{
         frame = current.getCurrentFrame();
         setWidth(3*frame.getWidth());
         setHeight(3*frame.getHeight());
-        setY(650-getHeight());
+        setY(690-getHeight());
     }
 
     @Override
