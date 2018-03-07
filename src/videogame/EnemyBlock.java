@@ -125,6 +125,8 @@ public class EnemyBlock {
             }
         }
         writer.println("" + timer.getTimer());
+        writer.println("" + timer.getTime());
+        writer.println("" + Enemy.getDirection());
     }
     
     public void load(BufferedReader reader) throws IOException{
@@ -139,10 +141,13 @@ public class EnemyBlock {
                 for(int k = 0; k < tokensS.length; k++){
                     tokens[k] = Integer.parseInt(tokensS[k]);
                 }
-                enemies.get(j).add(Enemy.load(tokens));
+                enemies.get(i).add(Enemy.load(tokens));
             }
         }
-        long time = Long.parseLong(reader.readLine());
-        timer = new Timer(time);
+        long aux1 = Long.parseLong(reader.readLine());
+        long aux2 = Long.parseLong(reader.readLine()); 
+        timer = new Timer(aux2, aux1);
+        
+        Enemy.setDirection(Integer.parseInt(reader.readLine()));
     }
 }

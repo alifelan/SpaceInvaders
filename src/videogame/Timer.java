@@ -21,12 +21,22 @@ public class Timer {
         timer = 0;
     }
     
+    public Timer(long time, long timer){
+        lastTime = System.currentTimeMillis();
+        this.time = time;
+        this.timer = timer;
+    }
+    
     public void setLastTime(){
         lastTime = System.currentTimeMillis();
     }
 
     public long getTimer() {
         return timer;
+    }
+    
+    public long getTime() {
+        return time;
     }
     
     public void tick() {

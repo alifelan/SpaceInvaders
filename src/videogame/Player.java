@@ -118,7 +118,7 @@ public class Player extends Item {
     @Override
     public void save(PrintWriter writer) {
         super.save(writer);
-        writer.println(","+speed+","+direction+","+","+score+","+lives);
+        writer.println(","+speed+","+direction+","+score+","+lives);
     }
     
     public static Player load(int[] tokens) {
