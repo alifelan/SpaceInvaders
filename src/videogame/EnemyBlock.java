@@ -34,6 +34,19 @@ public class EnemyBlock {
         timer = new Timer(3000);
     }
     
+    public boolean isEmpty(){
+        for(ArrayList<Enemy> column : enemies){
+            if(!column.isEmpty()){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public Timer getTimer() {
+        return timer;
+    }
+    
     public ArrayList<Bullet> shoot(){
         ArrayList<Bullet> bullets = new ArrayList<>();
         for(int i = 0; i < enemies.size(); i++){

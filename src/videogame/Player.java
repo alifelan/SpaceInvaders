@@ -24,6 +24,7 @@ public class Player extends Item {
     private int lives;
     private Timer timer;
     private Timer bulletGen;
+    private Timer winTimer;
     public boolean winner;
 
     private final Animation idleRight;
@@ -60,6 +61,8 @@ public class Player extends Item {
         score = 0;
         lives = 3;
         timer = new Timer(0);
+        winTimer = null;
+        
     }
 
     public boolean isWinner() {
@@ -118,9 +121,10 @@ public class Player extends Item {
             timer = null;
             lives--;
         }
-        if (isWinner()) {
+        if (isWinner() && winTimer == null) {
             current = win;
-        } else if (getLives() <= 0) {
+            winTimer = new Timer(1990);
+        } else if (getLives() <= 0 && !isWinner()) {
             if (timer == null) {
                 timer = new Timer(500);
             }
@@ -130,7 +134,7 @@ public class Player extends Item {
             } else {
                 current = loseRight;
             }
-        } else {
+        } else if(!isWinner()){
             if (keyManager.isPressed(MOVE_LEFT_KEY)) {
                 setX(getX() - speed);
                 current = moveLeft;
@@ -159,7 +163,11 @@ public class Player extends Item {
                 }
             }
         }
-        if (getLives() > 0 || !timer.isFinished()) {
+        if(winTimer != null && !winTimer.isFinished()){
+            winTimer.tick();
+            frame = current.getCurrentFrame();
+            current.tick();
+        } else if (getLives() > 0 || !timer.isFinished() && !isWinner()) {
             current.tick();
             frame = current.getCurrentFrame();
             setWidth(2 * frame.getWidth());
