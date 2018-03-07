@@ -116,6 +116,12 @@ public class Game implements Runnable {
             for(Bullet bullet : bullets) {
                 bullet.save(writer);
             }
+            for(int i=0; i<3; i++) {
+                writer.println(shields.get(i).size());
+                for(ShieldPiece piece : shields.get(i)) {
+                    piece.save(writer);
+                }
+            }
             writer.close();
         } catch(IOException ioe) {
             ioe.printStackTrace();
@@ -131,6 +137,13 @@ public class Game implements Runnable {
             bullets.clear();
             for(int i=0; i<b; i++) {
                 bullets.add(Bullet.load(sToInt(reader.readLine())));
+            }
+            for(int i=0; i<3; i++) {
+                shields.get(i).clear();
+                int s = Integer.parseInt(reader.readLine());
+                for(int j=0; j<s; j++) {
+                    shields.get(i).add(ShieldPiece.load(sToInt(reader.readLine())));
+                }
             }
             reader.close();
         } catch(IOException ioe) {
