@@ -16,12 +16,12 @@ import java.io.PrintWriter;
 import java.io.BufferedReader;
 import java.io.FileReader;
 
-
 /**
  *
  * @author antoniomejorado
  */
 public class Game implements Runnable {
+
     private BufferStrategy bs;      // to have several buffers when displaying
     private Graphics g;             // to paint objects
     private Display display;        // to display in the game
@@ -41,12 +41,12 @@ public class Game implements Runnable {
     private Timer winTimer;
     private final ArrayList<Bullet> bullets; // to store bullets
     private EnemyBlock enemyBlock;  // to store enemies
-    
     /**
      * to create title, width and height and set the game is still not running
+     *
      * @param title to set the title of the window
      * @param width to set the width of the window
-     * @param height  to set the height of the window
+     * @param height to set the height of the window
      */
     public Game(String title, int width, int height) {
         this.title = title;
@@ -65,6 +65,7 @@ public class Game implements Runnable {
 
     /**
      * To get the width of the game window
+     *
      * @return an <code>int</code> value with the width
      */
     public int getWidth() {
@@ -73,31 +74,30 @@ public class Game implements Runnable {
 
     /**
      * To get the height of the game window
+     *
      * @return an <code>int</code> value with the height
      */
     public int getHeight() {
         return height;
     }
-    
+
     /**
      * initializing the display window of the game
      */
     private void init() {
-         display = new Display(title, getWidth(), getHeight());  
-         Assets.init();
-         player = new Player(getWidth() / 2 - 35, getHeight() - 170, 70, 100, 4);
-         enemyBlock = new EnemyBlock(getWidth(), getHeight());
-         shields = new ArrayList<>();
-         for(int i=0; i<3; i++) {
-             shields.add(new ArrayList<>());
-             int x = i*getWidth()/3 + getWidth()/6 - 75;
-             for(int j=0; j<10; j++) {
-                 shields.get(i).add(new ShieldPiece(x+j*15, getHeight() - 200, 15, 15));
-             }
-         }
-         display.getJframe().addKeyListener(keyManager);
+        display = new Display(title, getWidth(), getHeight());
+        Assets.init();
+        player = new Player(getWidth() / 2 - 35, getHeight() - 170, 70, 100, 4);
+        enemyBlock = new EnemyBlock(getWidth(), getHeight());
+        for (int i = 0; i < 3; i++) {
+            shields.add(new ArrayList<>());
+            int x = i * getWidth() / 3 + getWidth() / 6 - 75;
+            for (int j = 0; j < 10; j++) {
+                shields.get(i).add(new ShieldPiece(x + j * 15, getHeight() - 200, 15, 15));
+            }
+        }
+        display.getJframe().addKeyListener(keyManager);
     }
-    
     /**
      * Splits a string into integer tokens
      * @param s string from the file
@@ -106,7 +106,7 @@ public class Game implements Runnable {
     private int[] sToInt(String s) {
         String tokensS[] = s.split(",");
         int tokens[] = new int[tokensS.length];
-        for(int i=0; i<tokens.length; i++) {
+        for (int i = 0; i < tokens.length; i++) {
             tokens[i] = Integer.parseInt(tokensS[i]);
         }
         return tokens;
@@ -120,18 +120,18 @@ public class Game implements Runnable {
             PrintWriter writer = new PrintWriter("data.txt");
             player.save(writer);
             enemyBlock.save(writer);
-            writer.println(""+bullets.size());
-            for(Bullet bullet : bullets) {
+            writer.println("" + bullets.size());
+            for (Bullet bullet : bullets) {
                 bullet.save(writer);
             }
-            for(int i=0; i<3; i++) {
+            for (int i = 0; i < 3; i++) {
                 writer.println(shields.get(i).size());
-                for(ShieldPiece piece : shields.get(i)) {
+                for (ShieldPiece piece : shields.get(i)) {
                     piece.save(writer);
                 }
             }
             writer.close();
-        } catch(IOException ioe) {
+        } catch (IOException ioe) {
             ioe.printStackTrace();
         }
     }
@@ -146,22 +146,22 @@ public class Game implements Runnable {
             enemyBlock.load(reader);
             int b = Integer.parseInt(reader.readLine());
             bullets.clear();
-            for(int i=0; i<b; i++) {
+            for (int i = 0; i < b; i++) {
                 bullets.add(Bullet.load(sToInt(reader.readLine())));
             }
-            for(int i=0; i<3; i++) {
+            for (int i = 0; i < 3; i++) {
                 shields.get(i).clear();
                 int s = Integer.parseInt(reader.readLine());
-                for(int j=0; j<s; j++) {
+                for (int j = 0; j < s; j++) {
                     shields.get(i).add(ShieldPiece.load(sToInt(reader.readLine())));
                 }
             }
             reader.close();
-        } catch(IOException ioe) {
+        } catch (IOException ioe) {
             ioe.printStackTrace();
         }
     }
-    
+
     @Override
     public void run() {
         init();
@@ -182,17 +182,17 @@ public class Game implements Runnable {
             delta += (now - lastTime) / timeTick;
             // updating the last time
             lastTime = now;
-            
+
             // if delta is positive we tick the game
             if (delta >= 1) {
                 tick();
                 render();
-                delta --;
+                delta--;
             }
         }
         stop();
     }
-    
+
     private void tick() {
         keyManager.tick();
         // checks if the user pressed pause
@@ -205,7 +205,7 @@ public class Game implements Runnable {
             if(keyManager.isReleased(LOAD_KEY)){
                 load();
             }
-            if(keyManager.isReleased(SAVE_KEY)){
+            if (keyManager.isReleased(SAVE_KEY)) {
                 save();
             }
             return;
@@ -215,7 +215,7 @@ public class Game implements Runnable {
         if(player.getLives() > 0 && !player.isWinner()) {
             player.checkBounds(this);
             enemyBlock.tick();
-            for(int i = 0; i < bullets.size(); i++){
+            for (int i = 0; i < bullets.size(); i++) {
                 Bullet bullet = bullets.get(i);
                 bullet.tick();
                 // checks if the bullet is out, or if it hits something depending on its type
@@ -223,8 +223,8 @@ public class Game implements Runnable {
                         player.intersects(bullet))) {
                     bullets.remove(i);
                     i--;
-                } else if(bullet.getType() == Bullet.PLAYER_BULLET && 
-                        enemyBlock.hasCrashed(bullet)){
+                } else if (bullet.getType() == Bullet.PLAYER_BULLET
+                        && enemyBlock.hasCrashed(bullet)) {
                     player.setScore(player.getScore() + 100);
                     bullets.remove(i);
                     i--;
@@ -232,7 +232,7 @@ public class Game implements Runnable {
             }
             // Checks if the player created a bullet, and if it did adds it to the array
             Bullet bullet = player.createBullet();
-            if(bullet != null){
+            if (bullet != null) {
                 bullets.add(bullet);
             }
             // checks if the enemies created bullets, and if they did adds them to the array
@@ -240,22 +240,25 @@ public class Game implements Runnable {
             shot.forEach((bullet1) -> {
                 bullets.add(bullet1);
             });
-            for(ArrayList<ShieldPiece> shield : shields) {
-                for(int i=0; i<shield.size(); i++) {
-                    for(int j=0; j<bullets.size(); j++) {
-                        if(shield.get(i).intersects(bullets.get(j))) {
+            for (ArrayList<ShieldPiece> shield : shields) {
+                for (int i = 0; i < shield.size(); i++) {
+                    for (int j = 0; j < bullets.size(); j++) {
+                        if (shield.get(i).intersects(bullets.get(j))) {
                             shield.get(i).setLives(shield.get(i).getLives() - 1);
                             bullets.remove(j);
                             break;
                         }
                     }
-                    if(shield.get(i).getLives() == 0) {
+                    if (shield.get(i).getLives() == 0) {
                         shield.remove(i);
                         i--;
                     }
                 }
             }
-        } else{
+            for (ArrayList<ShieldPiece> shield : shields) {
+                enemyBlock.crash(shield);
+            }
+        } else {
             bullets.clear();
             if(keyManager.isReleased(RESET_KEY)){
                 if(player.getLives() <= 0){
@@ -268,12 +271,14 @@ public class Game implements Runnable {
         // checks if the player won
         if(enemyBlock.isEmpty() && !player.isWinner()){
             player.setWinner(true);
+            bullets.clear();
         }
         // checks if the player lost by having enemies on the ground
         if(enemyBlock.isOnGround() && player.getLives() > 0)
             player.setLives(0);
+        }
     }
-    
+
     private void render() {
         // get the buffer strategy from the display
         bs = display.getCanvas().getBufferStrategy();
@@ -282,33 +287,31 @@ public class Game implements Runnable {
         after clearing the Rectanlge, getting the graphic object from the 
         buffer strategy element. 
         show the graphic and dispose it to the trash system
-        */
+         */
         if (bs == null) {
             display.getCanvas().createBufferStrategy(3);
-        }
-        else
-        {
+        } else {
             g = bs.getDrawGraphics();
             g.drawImage(Assets.background, 0, 0, width, height, null);
             player.render(g);
             enemyBlock.render(g);
-            for(Bullet bullet : bullets){
+            for (Bullet bullet : bullets) {
                 bullet.render(g);
             }
-            for(ArrayList<ShieldPiece> shield : shields) {
-                for(ShieldPiece piece : shield) {
+            for (ArrayList<ShieldPiece> shield : shields) {
+                for (ShieldPiece piece : shield) {
                     piece.render(g);
                 }
             }
             g.setColor(Color.WHITE);
             g.setFont(new Font(g.getFont().getFontName(), Font.PLAIN, 40));
-            g.drawString("Score: " + String.valueOf(player.getScore()), 
-                    getWidth() - getWidth()/5, 690);
-            for(int i=0; i<player.getLives(); i++) {
-                g.drawImage(Assets.lives, i*40+20, getHeight()-40, 40, 40, null);
+            g.drawString("Score: " + String.valueOf(player.getScore()),
+                    getWidth() - getWidth() / 5, 690);
+            for (int i = 0; i < player.getLives(); i++) {
+                g.drawImage(Assets.lives, i * 40 + 20, getHeight() - 40, 40, 40, null);
             }
-            if(paused) {
-                g.drawImage(Assets.pause, 100, 100, width- 200, height - 200, null);
+            if (paused) {
+                g.drawImage(Assets.pause, 100, 100, width - 200, height - 200, null);
             }
             if(player.isWinner()){
                 g.drawString("Press 'R' to play continue", 
@@ -337,8 +340,15 @@ public class Game implements Runnable {
         player = new Player(getWidth() / 2 - player.getWidth() / 2, getHeight() - 170, 70, 100, 4);
         enemyBlock = new EnemyBlock(getWidth(), getHeight());
         Assets.reset();
+              for (int i = 0; i < 3; i++) {
+            shields.add(new ArrayList<>());
+            int x = i * getWidth() / 3 + getWidth() / 6 - 75;
+            for (int j = 0; j < 10; j++) {
+                shields.get(i).add(new ShieldPiece(x + j * 15, getHeight() - 200, 15, 15));
+            }
+        }
     }
-    
+
     /**
      * setting the thread for the game
      */
@@ -349,7 +359,7 @@ public class Game implements Runnable {
             thread.start();
         }
     }
-    
+
     /**
      * stopping the thread
      */
@@ -360,7 +370,7 @@ public class Game implements Runnable {
                 thread.join();
             } catch (InterruptedException ie) {
                 ie.printStackTrace();
-            }           
+            }
         }
     }
 }
