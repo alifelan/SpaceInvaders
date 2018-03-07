@@ -124,6 +124,7 @@ public class EnemyBlock {
                 enemy.save(writer);
             }
         }
+        writer.println("" + timer.getTimer());
     }
     
     public void load(BufferedReader reader) throws IOException{
@@ -141,5 +142,7 @@ public class EnemyBlock {
                 enemies.get(j).add(Enemy.load(tokens));
             }
         }
+        long time = Long.parseLong(reader.readLine());
+        timer = new Timer(time);
     }
 }
