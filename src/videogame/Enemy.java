@@ -20,6 +20,7 @@ public class Enemy extends Item {
     public static int TYPE_2 = 2;
     public static int TYPE_3 = 3;
     private final int type;
+    // Animations
     private static Animation walkLeft;
     private static Animation walkRight;
     private static Animation walkDown;
@@ -27,6 +28,14 @@ public class Enemy extends Item {
     private static Animation current;
     private static int direction;
     
+    /**
+     * Constructor
+     * @param x position in x
+     * @param y position in y
+     * @param width width of the enemy
+     * @param height height of the enemy
+     * @param type 
+     */
     public Enemy(int x, int y, int width, int height, int type) {
         super(x,y,width,height);
         this.type = type;
@@ -37,6 +46,10 @@ public class Enemy extends Item {
         current = walkRight;
     }
 
+    /**
+     * Updates direction
+     * @param direction Where its heading
+     */
     public static void setDirection(int direction) {
         Enemy.direction = direction;
         if(direction == 0){
@@ -48,13 +61,21 @@ public class Enemy extends Item {
         }
     }
     
+    /**
+     * Returns direction
+     * @return where the enemy is heading
+     */
     public static int getDirection(){
         return direction;
     }
 
+    /**
+     * Creates a bullet randomly
+     * @return null if the enemy didnt create a bullet, a new bullet if it did
+     */
     public Bullet createBullet() {
         int prob = (int)(Math.random()*1000);
-        if(prob < 999) {
+        if(prob < 995) {
             return null;
         }
         return new Bullet(getX() + getWidth()/2-10, getY() + getHeight(), 
@@ -67,10 +88,18 @@ public class Enemy extends Item {
         writer.println(","+type);
     }
     
+    /**
+     * Loads the enemy
+     * @param tokens values
+     * @return a new enemy with the values
+     */
     public static Enemy load(int[] tokens) {
         return new Enemy(tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]);
     }
     
+    /**
+     * Moves the enemy depending of its direction
+     */
     @Override
     public void tick() {
         if(direction == 0){
