@@ -31,17 +31,16 @@ public class Game implements Runnable {
     private Thread thread;          // thread to create the game
     private boolean running;        // to set the game
     private boolean paused;         // flag that checks if game is paused
-    private final int PAUSED_KEY;
-    private final int LOAD_KEY;
-    private final int SAVE_KEY;
-    private final int RESET_KEY;
+    private final int PAUSED_KEY;   // to access keyboard
+    private final int LOAD_KEY;     // to access keyboard
+    private final int SAVE_KEY;     // to access keyboard
+    private final int RESET_KEY;    // to access keyboard
     private Player player;          // to use a player
     private final KeyManager keyManager;  // to manage the keyboard
-    private final ArrayList<Bullet> bullets;
     private final ArrayList<ArrayList<ShieldPiece>> shields;
-    private EnemyBlock enemyBlock;
     private Timer winTimer;
-
+    private final ArrayList<Bullet> bullets; // to store bullets
+    private EnemyBlock enemyBlock;  // to store enemies
     /**
      * to create title, width and height and set the game is still not running
      *
@@ -62,7 +61,6 @@ public class Game implements Runnable {
         SAVE_KEY = KeyEvent.VK_S;
         RESET_KEY = KeyEvent.VK_R;
         winTimer = null;
-        shields = new ArrayList<>();
     }
 
     /**
@@ -100,7 +98,11 @@ public class Game implements Runnable {
         }
         display.getJframe().addKeyListener(keyManager);
     }
-
+    /**
+     * Splits a string into integer tokens
+     * @param s string from the file
+     * @return array of integers
+     */
     private int[] sToInt(String s) {
         String tokensS[] = s.split(",");
         int tokens[] = new int[tokensS.length];
@@ -109,7 +111,10 @@ public class Game implements Runnable {
         }
         return tokens;
     }
-
+    
+    /**
+     * Calls every save method from the pbjects
+     */
     private void save() {
         try {
             PrintWriter writer = new PrintWriter("data.txt");
@@ -130,7 +135,10 @@ public class Game implements Runnable {
             ioe.printStackTrace();
         }
     }
-
+    
+    /**
+     * Loads objects
+     */
     private void load() {
         try {
             BufferedReader reader = new BufferedReader(new FileReader("data.txt"));
@@ -187,13 +195,14 @@ public class Game implements Runnable {
 
     private void tick() {
         keyManager.tick();
-        // avancing player with colision
-        if (keyManager.isReleased(PAUSED_KEY)) {
+        // checks if the user pressed pause
+        if(keyManager.isReleased(PAUSED_KEY)) {
             paused = !paused;
             enemyBlock.getTimer().setLastTime();
         }
-        if (paused) {
-            if (keyManager.isReleased(LOAD_KEY)) {
+        // Saves or loads if the player pressed the key
+        if(paused) {
+            if(keyManager.isReleased(LOAD_KEY)){
                 load();
             }
             if (keyManager.isReleased(SAVE_KEY)) {
@@ -202,14 +211,16 @@ public class Game implements Runnable {
             return;
         }
         player.tick();
-        if (player.getLives() > 0) {
+        // moves everything if the game is going
+        if(player.getLives() > 0 && !player.isWinner()) {
             player.checkBounds(this);
             enemyBlock.tick();
             for (int i = 0; i < bullets.size(); i++) {
                 Bullet bullet = bullets.get(i);
                 bullet.tick();
-                if (bullet.isOutOfBounds(this) || (bullet.getType() == Bullet.ENEMY_BULLET
-                        && player.intersects(bullet))) {
+                // checks if the bullet is out, or if it hits something depending on its type
+                if(bullet.isOutOfBounds(this) || (bullet.getType() == Bullet.ENEMY_BULLET && 
+                        player.intersects(bullet))) {
                     bullets.remove(i);
                     i--;
                 } else if (bullet.getType() == Bullet.PLAYER_BULLET
@@ -219,10 +230,12 @@ public class Game implements Runnable {
                     i--;
                 }
             }
+            // Checks if the player created a bullet, and if it did adds it to the array
             Bullet bullet = player.createBullet();
             if (bullet != null) {
                 bullets.add(bullet);
             }
+            // checks if the enemies created bullets, and if they did adds them to the array
             ArrayList<Bullet> shot = enemyBlock.shoot();
             shot.forEach((bullet1) -> {
                 bullets.add(bullet1);
@@ -247,19 +260,21 @@ public class Game implements Runnable {
             }
         } else {
             bullets.clear();
-            if (keyManager.isReleased(RESET_KEY)) {
-                reset();
+            if(keyManager.isReleased(RESET_KEY)){
+                if(player.getLives() <= 0){
+                    reset();
+                } else {
+                    continueGame();
+                }
             }
         }
-        if (enemyBlock.isEmpty() && !player.isWinner()) {
-            winTimer = new Timer(1990);
+        // checks if the player won
+        if(enemyBlock.isEmpty() && !player.isWinner()){
             player.setWinner(true);
             bullets.clear();
         }
-        if (player.isWinner()) {
-            winTimer.tick();
-        }
-        if (enemyBlock.isOnGround() && player.getLives() > 0) {
+        // checks if the player lost by having enemies on the ground
+        if(enemyBlock.isOnGround() && player.getLives() > 0)
             player.setLives(0);
         }
     }
@@ -298,20 +313,34 @@ public class Game implements Runnable {
             if (paused) {
                 g.drawImage(Assets.pause, 100, 100, width - 200, height - 200, null);
             }
-            if (winTimer != null && winTimer.isFinished()) {
-                g.drawString("Press SPACE to play again",
-                        100, getHeight() / 2);
+            if(player.isWinner()){
+                g.drawString("Press 'R' to play continue", 
+                    100, getHeight() / 2);
+            } else if(player.getLives() <= 0){
+                g.drawString("Press 'R' to play again", 
+                    100, getHeight() / 2);
             }
             bs.show();
             g.dispose();
         }
-
     }
-
+    
+    /**
+     * Prepares the game for the player to keep on
+     */
+    public void continueGame(){
+        enemyBlock = new EnemyBlock(getWidth(), getHeight());
+        player.setWinner(false);
+    }
+    
+    /**
+     * Restarts the game
+     */
     public void reset() {
         player = new Player(getWidth() / 2 - player.getWidth() / 2, getHeight() - 170, 70, 100, 4);
         enemyBlock = new EnemyBlock(getWidth(), getHeight());
-        for (int i = 0; i < 3; i++) {
+        Assets.reset();
+              for (int i = 0; i < 3; i++) {
             shields.add(new ArrayList<>());
             int x = i * getWidth() / 3 + getWidth() / 6 - 75;
             for (int j = 0; j < 10; j++) {

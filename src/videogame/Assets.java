@@ -127,4 +127,12 @@ public class Assets {
         enemyBullet = ImageLoader.loadImage("/images/enemyBullet.png");
     }
     
+    public static void lost(){
+        background = ImageLoader.loadImage("/images/loss.jpg");
+    }
+    
+    public static void reset(){
+        background = ImageLoader.loadImage("/images/Background.jpg");
+    }
+    
 }
