@@ -40,9 +40,9 @@ public class Game implements Runnable {
     private final ArrayList<ArrayList<ShieldPiece>> shields;
     private final ArrayList<Bullet> bullets; // to store bullets
     private EnemyBlock enemyBlock;  // to store enemies
+    private Boost boost;            // to store boost
     private final SoundClip shieldHit;  // to play sound when the shield is hit
     private final SoundClip shoot;  // to play when someone shoots
-    
     /**
      * to create title, width and height and set the game is still not running
      *
@@ -93,6 +93,7 @@ public class Game implements Runnable {
         Assets.init();
         player = new Player(getWidth() / 2 - 35, getHeight() - 170, 70, 100, 4);
         enemyBlock = new EnemyBlock(getWidth(), getHeight());
+        boost = new Boost(0, 0, 35, 35);
         for (int i = 0; i < 3; i++) {
             shields.add(new ArrayList<>());
             int x = i * getWidth() / 3 + getWidth() / 6 - 75;
@@ -219,6 +220,7 @@ public class Game implements Runnable {
         if(player.getLives() > 0 && !player.isWinner()) {
             player.checkBounds(this);
             enemyBlock.tick();
+            boost.tick();
             for (int i = 0; i < bullets.size(); i++) {
                 Bullet bullet = bullets.get(i);
                 bullet.tick();
@@ -232,6 +234,10 @@ public class Game implements Runnable {
                     player.setScore(player.getScore() + 100);
                     bullets.remove(i);
                     i--;
+                } else if(bullet.intersects(boost)) {
+                    bullets.remove(i);
+                    i--;
+                    boost.crash(player);
                 }
             }
             // Checks if the player created a bullet, and if it did adds it to the array
@@ -303,6 +309,7 @@ public class Game implements Runnable {
             g.drawImage(Assets.background, 0, 0, width, height, null);
             player.render(g);
             enemyBlock.render(g);
+            boost.render(g);
             for (Bullet bullet : bullets) {
                 bullet.render(g);
             }
