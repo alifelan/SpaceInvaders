@@ -6,6 +6,9 @@
 package videogame;
 
 import java.awt.Graphics;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 /**
@@ -109,6 +112,33 @@ public class EnemyBlock {
         for (ArrayList<Enemy> column : enemies) {
             for (Enemy enemy : column) {
                 enemy.render(g);
+            }
+        }
+    }
+    
+    public void save(PrintWriter writer){
+        writer.println("" + enemies.size());
+        for(ArrayList<Enemy> column : enemies){
+            writer.println("" + column.size());
+            for(Enemy enemy : column){
+                enemy.save(writer);
+            }
+        }
+    }
+    
+    public void load(BufferedReader reader) throws IOException{
+        enemies.clear();
+        int x = Integer.parseInt(reader.readLine());
+        for(int i = 0; i < x; i++){
+            enemies.add(new ArrayList<Enemy>());
+            int y = Integer.parseInt(reader.readLine());
+            for(int j = 0; j < y; j++){
+                String tokensS[] = reader.readLine().split(",");
+                int tokens[] = new int[tokensS.length];
+                for(int k = 0; k < tokensS.length; k++){
+                    tokens[k] = Integer.parseInt(tokensS[k]);
+                }
+                enemies.get(j).add(Enemy.load(tokens));
             }
         }
     }
